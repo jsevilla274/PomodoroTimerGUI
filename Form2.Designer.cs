@@ -194,9 +194,9 @@
             this.checkBox4.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.checkBox4.Location = new System.Drawing.Point(15, 219);
             this.checkBox4.Name = "checkBox4";
-            this.checkBox4.Size = new System.Drawing.Size(181, 21);
+            this.checkBox4.Size = new System.Drawing.Size(183, 21);
             this.checkBox4.TabIndex = 14;
-            this.checkBox4.Text = "Enable global \"Next\" key";
+            this.checkBox4.Text = "Enable global \"Start\" key";
             this.checkBox4.UseVisualStyleBackColor = true;
             // 
             // label7
@@ -205,9 +205,9 @@
             this.label7.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label7.Location = new System.Drawing.Point(33, 253);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(121, 17);
+            this.label7.Size = new System.Drawing.Size(123, 17);
             this.label7.TabIndex = 15;
-            this.label7.Text = "Global \"Next\" key:";
+            this.label7.Text = "Global \"Start\" key:";
             // 
             // textBox1
             // 

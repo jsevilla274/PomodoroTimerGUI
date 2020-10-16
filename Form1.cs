@@ -25,6 +25,7 @@ namespace PomodoroTimerForm
 
         // Other defaults
         int DefaultRemindSeconds = 30;
+        const int INSERT_KEYCODE = 45;
 
         enum Period
         {
@@ -107,7 +108,10 @@ namespace PomodoroTimerForm
             // period, so it makes sense they are the only ones that can stop the remindSound
             remindSoundTimer.Stop();
 
-            // display start and end time of the period on the GUI
+            // Remove hook for global "start" key if necessary
+            InterceptKeys.Stop();
+
+            // Display start and end time of the period on the GUI
             UpdateStartEndTimeDisplay();
             startTimeDisplay.Visible = true;
             endTimeDisplay.Visible = true;
@@ -118,6 +122,19 @@ namespace PomodoroTimerForm
             periodTimer.Stop();
             startpauseButton.Text = "Start";
             TimerRunning = false;
+        }
+
+        private void OnKeyIntercept(int keyCode)
+        {
+            if (keyCode == INSERT_KEYCODE)
+            {
+                if (!TimerRunning)
+                {
+                    StartTimerAndDisplay();
+                    RemindSound.Play();
+                    // CONSIDER: WinFlash.StopFlashingWindow(this.Handle); // Does not lower taskbar though
+                }
+            }
         }
 
         private void startpauseButton_Click(object sender, EventArgs e)
@@ -191,6 +208,9 @@ namespace PomodoroTimerForm
                     // Activate Reminder Sound
                     RemindSeconds = DefaultRemindSeconds;
                     remindSoundTimer.Start();
+
+                    // Enable keyboard hook for "global" start key
+                    InterceptKeys.Start(OnKeyIntercept);
                 }
             }
         }
