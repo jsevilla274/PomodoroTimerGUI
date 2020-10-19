@@ -14,17 +14,17 @@ namespace PomodoroTimerForm
     public partial class Form1 : Form
     {
         // Work default values
-        int workPeriodMinutes = 1;//20
-        int workPeriodSeconds = 5; //0
-        string workPeriodLabel = "Work";
+        int WorkPeriodMinutes = Properties.Settings.Default.WorkPeriodMinutes;
+        int WorkPeriodSeconds = Properties.Settings.Default.WorkPeriodSeconds;
+        const string WorkPeriodLabel = "Work";
 
         // Rest default values
-        int restPeriodMinutes = 0;//20
-        int restPeriodSeconds = 5; //0
-        string restPeriodLabel = "Rest";
+        int RestPeriodMinutes = Properties.Settings.Default.RestPeriodMinutes;
+        int RestPeriodSeconds = Properties.Settings.Default.RestPeriodSeconds;
+        const string RestPeriodLabel = "Rest";
 
         // Other defaults
-        int DefaultRemindSeconds = 30;
+        int DefaultRemindSeconds = Properties.Settings.Default.RemindSeconds;
         const int INSERT_KEYCODE = 45;
 
         enum Period
@@ -37,6 +37,7 @@ namespace PomodoroTimerForm
         Period PeriodCurrent;
         bool TimerRunning = false;
         bool HaltTimerOnPeriodEnd = true;
+        bool HiddenInSystemTray = false;
         SoundPlayer PeriodEndSound, RemindSound;
 
         public Form1()
@@ -71,30 +72,30 @@ namespace PomodoroTimerForm
             if (p == Period.Work)
             {
                 PeriodCurrent = p;
-                PeriodMinutes = workPeriodMinutes;
-                PeriodSeconds = workPeriodSeconds;
+                PeriodMinutes = WorkPeriodMinutes;
+                PeriodSeconds = WorkPeriodSeconds;
 
                 // update GUI elements
-                periodLabelDisplay.Text = "- " + workPeriodLabel + " -";
-                timeDisplay.Text = FormatPeriodTime(PeriodMinutes, PeriodSeconds);
-                restartTimeInput.Value = new DateTime(2000, 1, 1, 1, workPeriodMinutes, workPeriodSeconds);
+                periodLabelDisplay.Text = "- " + WorkPeriodLabel + " -";
+                timeDisplay.Text = FormatPeriodTime(WorkPeriodMinutes, WorkPeriodSeconds);
+                restartTimeInput.Value = new DateTime(2000, 1, 1, 1, WorkPeriodMinutes, WorkPeriodSeconds);
                 UpdateStartEndTimeDisplay();
             }
             else if (p == Period.Rest)
             {
                 PeriodCurrent = p;
-                PeriodMinutes = restPeriodMinutes;
-                PeriodSeconds = restPeriodSeconds;
+                PeriodMinutes = RestPeriodMinutes;
+                PeriodSeconds = RestPeriodSeconds;
 
                 // update GUI elements
-                periodLabelDisplay.Text = "- " + restPeriodLabel + " -";
-                timeDisplay.Text = FormatPeriodTime(PeriodMinutes, PeriodSeconds);
-                restartTimeInput.Value = new DateTime(2000, 1, 1, 1, restPeriodMinutes, restPeriodSeconds);
+                periodLabelDisplay.Text = "- " + RestPeriodLabel + " -";
+                timeDisplay.Text = FormatPeriodTime(RestPeriodMinutes, RestPeriodSeconds);
+                restartTimeInput.Value = new DateTime(2000, 1, 1, 1, RestPeriodMinutes, RestPeriodSeconds);
                 UpdateStartEndTimeDisplay();
             }
             else
             {
-                Console.WriteLine("ERROR, Bad period passed to ChagePeriodTo");
+                Console.WriteLine("ERROR, Bad period passed to ChangePeriodTo");
             }
         }
 
@@ -149,6 +150,10 @@ namespace PomodoroTimerForm
             }
         }
 
+        /// <summary>
+        /// When the restart button is clicked, the timer is reset to the input time until the
+        /// end of the period
+        /// </summary>
         private void restartButton_Click(object sender, EventArgs e)
         {
             periodTimer.Stop();
@@ -191,12 +196,13 @@ namespace PomodoroTimerForm
                 if (HaltTimerOnPeriodEnd)
                 {
                     StopTimerAndDisplay();
-                    if (this.WindowState != FormWindowState.Normal)
+                    if (HiddenInSystemTray) //TODO: Make it optional to pop it up with flash
                     {
                         // unhide window from system tray
-                        this.WindowState = FormWindowState.Minimized;
                         Show();
-                        notifyIcon.Visible = false;
+                        HiddenInSystemTray = false;
+                        //this.WindowState = FormWindowState.Minimized;
+                        //notifyIcon.Visible = false;
                     }
 
                     // Make notify user of period end (Taskbar icon flash & sound)
@@ -248,20 +254,30 @@ namespace PomodoroTimerForm
             }
         }
 
-        private void Form1_Resize(object sender, EventArgs e)
-        {
-            if (this.WindowState == FormWindowState.Minimized)
-            {
-                Hide();
-                notifyIcon.Visible = true;
-            }
-        }
+        //private void Form1_Resize(object sender, EventArgs e)
+        //{
+        //    if (this.WindowState == FormWindowState.Minimized)
+        //    {
+        //        Hide();
+        //        notifyIcon.Visible = true;
+        //    }
+        //}
 
         private void notifyIcon_MouseClick(object sender, MouseEventArgs e)
         {
-            Show();
-            this.WindowState = FormWindowState.Normal;
-            notifyIcon.Visible = false;
+            if (HiddenInSystemTray)
+            {
+                Show();
+                this.WindowState = FormWindowState.Normal;
+                //notifyIcon.Visible = false;
+                HiddenInSystemTray = false;
+            }
+            else
+            {
+                Hide();
+                HiddenInSystemTray = true;
+                //notifyIcon.Visible = true;
+            }
         }
     }
 }
