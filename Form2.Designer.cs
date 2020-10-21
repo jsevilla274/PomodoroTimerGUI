@@ -31,21 +31,21 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form2));
             this.label1 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
-            this.checkBox1 = new System.Windows.Forms.CheckBox();
-            this.checkBox2 = new System.Windows.Forms.CheckBox();
-            this.label5 = new System.Windows.Forms.Label();
-            this.numericUpDown5 = new System.Windows.Forms.NumericUpDown();
-            this.label6 = new System.Windows.Forms.Label();
-            this.checkBox3 = new System.Windows.Forms.CheckBox();
-            this.checkBox4 = new System.Windows.Forms.CheckBox();
-            this.label7 = new System.Windows.Forms.Label();
-            this.textBox1 = new System.Windows.Forms.TextBox();
-            this.button1 = new System.Windows.Forms.Button();
-            this.button2 = new System.Windows.Forms.Button();
-            this.restartTimeInput = new System.Windows.Forms.DateTimePicker();
-            this.dateTimePicker1 = new System.Windows.Forms.DateTimePicker();
-            this.checkBox5 = new System.Windows.Forms.CheckBox();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown5)).BeginInit();
+            this.periodEndSoundSetting = new System.Windows.Forms.CheckBox();
+            this.remindSetting = new System.Windows.Forms.CheckBox();
+            this.remindSecondsLabel1 = new System.Windows.Forms.Label();
+            this.remindSecondsSetting = new System.Windows.Forms.NumericUpDown();
+            this.remindSecondsLabel2 = new System.Windows.Forms.Label();
+            this.windowFlashSetting = new System.Windows.Forms.CheckBox();
+            this.globalStartSetting = new System.Windows.Forms.CheckBox();
+            this.globalStartKeyLabel = new System.Windows.Forms.Label();
+            this.globalStartKeySetting = new System.Windows.Forms.TextBox();
+            this.saveSetting = new System.Windows.Forms.Button();
+            this.cancelSetting = new System.Windows.Forms.Button();
+            this.workPeriodSetting = new System.Windows.Forms.DateTimePicker();
+            this.restPeriodSetting = new System.Windows.Forms.DateTimePicker();
+            this.periodEndStopSetting = new System.Windows.Forms.CheckBox();
+            ((System.ComponentModel.ISupportInitialize)(this.remindSecondsSetting)).BeginInit();
             this.SuspendLayout();
             // 
             // label1
@@ -68,193 +68,198 @@
             this.label4.TabIndex = 4;
             this.label4.Text = "Rest period (MM:SS)";
             // 
-            // checkBox1
+            // periodEndSoundSetting
             // 
-            this.checkBox1.AutoSize = true;
-            this.checkBox1.Checked = true;
-            this.checkBox1.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.checkBox1.Location = new System.Drawing.Point(15, 89);
-            this.checkBox1.Name = "checkBox1";
-            this.checkBox1.Size = new System.Drawing.Size(201, 21);
-            this.checkBox1.TabIndex = 8;
-            this.checkBox1.Text = "Play a sound on period end";
-            this.checkBox1.UseVisualStyleBackColor = true;
+            this.periodEndSoundSetting.AutoSize = true;
+            this.periodEndSoundSetting.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.periodEndSoundSetting.Location = new System.Drawing.Point(15, 89);
+            this.periodEndSoundSetting.Name = "periodEndSoundSetting";
+            this.periodEndSoundSetting.Size = new System.Drawing.Size(201, 21);
+            this.periodEndSoundSetting.TabIndex = 8;
+            this.periodEndSoundSetting.Text = "Play a sound on period end";
+            this.periodEndSoundSetting.UseVisualStyleBackColor = true;
             // 
-            // checkBox2
+            // remindSetting
             // 
-            this.checkBox2.CheckAlign = System.Drawing.ContentAlignment.TopLeft;
-            this.checkBox2.Checked = true;
-            this.checkBox2.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBox2.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.checkBox2.Location = new System.Drawing.Point(36, 151);
-            this.checkBox2.Name = "checkBox2";
-            this.checkBox2.Size = new System.Drawing.Size(242, 38);
-            this.checkBox2.TabIndex = 9;
-            this.checkBox2.Text = "Play a reminder sound until a new period starts";
-            this.checkBox2.UseVisualStyleBackColor = true;
+            this.remindSetting.CheckAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.remindSetting.Enabled = false;
+            this.remindSetting.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.remindSetting.Location = new System.Drawing.Point(36, 151);
+            this.remindSetting.Name = "remindSetting";
+            this.remindSetting.Size = new System.Drawing.Size(242, 38);
+            this.remindSetting.TabIndex = 9;
+            this.remindSetting.Text = "Play a reminder sound until a new period starts";
+            this.remindSetting.UseVisualStyleBackColor = true;
+            this.remindSetting.CheckedChanged += new System.EventHandler(this.remindSetting_CheckedChanged);
             // 
-            // label5
+            // remindSecondsLabel1
             // 
-            this.label5.AutoSize = true;
-            this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label5.Location = new System.Drawing.Point(52, 198);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(95, 17);
-            this.label5.TabIndex = 10;
-            this.label5.Text = "Remind every";
+            this.remindSecondsLabel1.AutoSize = true;
+            this.remindSecondsLabel1.Enabled = false;
+            this.remindSecondsLabel1.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.remindSecondsLabel1.Location = new System.Drawing.Point(52, 198);
+            this.remindSecondsLabel1.Name = "remindSecondsLabel1";
+            this.remindSecondsLabel1.Size = new System.Drawing.Size(95, 17);
+            this.remindSecondsLabel1.TabIndex = 10;
+            this.remindSecondsLabel1.Text = "Remind every";
             // 
-            // numericUpDown5
+            // remindSecondsSetting
             // 
-            this.numericUpDown5.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.numericUpDown5.Location = new System.Drawing.Point(150, 196);
-            this.numericUpDown5.Minimum = new decimal(new int[] {
+            this.remindSecondsSetting.Enabled = false;
+            this.remindSecondsSetting.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.remindSecondsSetting.Location = new System.Drawing.Point(150, 196);
+            this.remindSecondsSetting.Minimum = new decimal(new int[] {
             1,
             0,
             0,
             0});
-            this.numericUpDown5.Name = "numericUpDown5";
-            this.numericUpDown5.Size = new System.Drawing.Size(45, 23);
-            this.numericUpDown5.TabIndex = 11;
-            this.numericUpDown5.Value = new decimal(new int[] {
+            this.remindSecondsSetting.Name = "remindSecondsSetting";
+            this.remindSecondsSetting.Size = new System.Drawing.Size(45, 23);
+            this.remindSecondsSetting.TabIndex = 11;
+            this.remindSecondsSetting.Value = new decimal(new int[] {
             1,
             0,
             0,
             0});
             // 
-            // label6
+            // remindSecondsLabel2
             // 
-            this.label6.AutoSize = true;
-            this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label6.Location = new System.Drawing.Point(198, 198);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(61, 17);
-            this.label6.TabIndex = 12;
-            this.label6.Text = "seconds";
+            this.remindSecondsLabel2.AutoSize = true;
+            this.remindSecondsLabel2.Enabled = false;
+            this.remindSecondsLabel2.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.remindSecondsLabel2.Location = new System.Drawing.Point(198, 198);
+            this.remindSecondsLabel2.Name = "remindSecondsLabel2";
+            this.remindSecondsLabel2.Size = new System.Drawing.Size(61, 17);
+            this.remindSecondsLabel2.TabIndex = 12;
+            this.remindSecondsLabel2.Text = "seconds";
             // 
-            // checkBox3
+            // windowFlashSetting
             // 
-            this.checkBox3.AutoSize = true;
-            this.checkBox3.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.checkBox3.Location = new System.Drawing.Point(15, 291);
-            this.checkBox3.Name = "checkBox3";
-            this.checkBox3.Size = new System.Drawing.Size(250, 21);
-            this.checkBox3.TabIndex = 13;
-            this.checkBox3.Text = "Taskbar icon flashes on period end";
-            this.checkBox3.UseVisualStyleBackColor = true;
+            this.windowFlashSetting.AutoSize = true;
+            this.windowFlashSetting.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.windowFlashSetting.Location = new System.Drawing.Point(15, 291);
+            this.windowFlashSetting.Name = "windowFlashSetting";
+            this.windowFlashSetting.Size = new System.Drawing.Size(250, 21);
+            this.windowFlashSetting.TabIndex = 13;
+            this.windowFlashSetting.Text = "Taskbar icon flashes on period end";
+            this.windowFlashSetting.UseVisualStyleBackColor = true;
             // 
-            // checkBox4
+            // globalStartSetting
             // 
-            this.checkBox4.AutoSize = true;
-            this.checkBox4.Checked = true;
-            this.checkBox4.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBox4.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.checkBox4.Location = new System.Drawing.Point(36, 230);
-            this.checkBox4.Name = "checkBox4";
-            this.checkBox4.Size = new System.Drawing.Size(183, 21);
-            this.checkBox4.TabIndex = 14;
-            this.checkBox4.Text = "Enable \"global\" Start key";
-            this.checkBox4.UseVisualStyleBackColor = true;
+            this.globalStartSetting.AutoSize = true;
+            this.globalStartSetting.Enabled = false;
+            this.globalStartSetting.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.globalStartSetting.Location = new System.Drawing.Point(36, 230);
+            this.globalStartSetting.Name = "globalStartSetting";
+            this.globalStartSetting.Size = new System.Drawing.Size(183, 21);
+            this.globalStartSetting.TabIndex = 14;
+            this.globalStartSetting.Text = "Enable \"global\" Start key";
+            this.globalStartSetting.UseVisualStyleBackColor = true;
+            this.globalStartSetting.CheckedChanged += new System.EventHandler(this.globalStartSetting_CheckedChanged);
             // 
-            // label7
+            // globalStartKeyLabel
             // 
-            this.label7.AutoSize = true;
-            this.label7.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label7.Location = new System.Drawing.Point(52, 260);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(113, 17);
-            this.label7.TabIndex = 15;
-            this.label7.Text = "Global Start key:";
+            this.globalStartKeyLabel.AutoSize = true;
+            this.globalStartKeyLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.globalStartKeyLabel.Location = new System.Drawing.Point(52, 260);
+            this.globalStartKeyLabel.Name = "globalStartKeyLabel";
+            this.globalStartKeyLabel.Size = new System.Drawing.Size(113, 17);
+            this.globalStartKeyLabel.TabIndex = 15;
+            this.globalStartKeyLabel.Text = "Global Start key:";
             // 
-            // textBox1
+            // globalStartKeySetting
             // 
-            this.textBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBox1.Location = new System.Drawing.Point(179, 257);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.ReadOnly = true;
-            this.textBox1.Size = new System.Drawing.Size(100, 23);
-            this.textBox1.TabIndex = 16;
+            this.globalStartKeySetting.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.globalStartKeySetting.Location = new System.Drawing.Point(179, 257);
+            this.globalStartKeySetting.Name = "globalStartKeySetting";
+            this.globalStartKeySetting.ReadOnly = true;
+            this.globalStartKeySetting.Size = new System.Drawing.Size(100, 23);
+            this.globalStartKeySetting.TabIndex = 16;
+            this.globalStartKeySetting.Click += new System.EventHandler(this.globalStartKeySetting_Click);
+            this.globalStartKeySetting.KeyDown += new System.Windows.Forms.KeyEventHandler(this.globalStartKeySetting_KeyDown);
             // 
-            // button1
+            // saveSetting
             // 
-            this.button1.Location = new System.Drawing.Point(25, 332);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(116, 23);
-            this.button1.TabIndex = 17;
-            this.button1.Text = "Save";
-            this.button1.UseVisualStyleBackColor = true;
+            this.saveSetting.Location = new System.Drawing.Point(25, 329);
+            this.saveSetting.Name = "saveSetting";
+            this.saveSetting.Size = new System.Drawing.Size(116, 23);
+            this.saveSetting.TabIndex = 17;
+            this.saveSetting.Text = "Save";
+            this.saveSetting.UseVisualStyleBackColor = true;
+            this.saveSetting.Click += new System.EventHandler(this.saveSetting_Click);
             // 
-            // button2
+            // cancelSetting
             // 
-            this.button2.Location = new System.Drawing.Point(159, 332);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(116, 23);
-            this.button2.TabIndex = 18;
-            this.button2.Text = "Cancel";
-            this.button2.UseVisualStyleBackColor = true;
+            this.cancelSetting.Location = new System.Drawing.Point(159, 329);
+            this.cancelSetting.Name = "cancelSetting";
+            this.cancelSetting.Size = new System.Drawing.Size(116, 23);
+            this.cancelSetting.TabIndex = 18;
+            this.cancelSetting.Text = "Cancel";
+            this.cancelSetting.UseVisualStyleBackColor = true;
+            this.cancelSetting.Click += new System.EventHandler(this.cancelSetting_Click);
             // 
-            // restartTimeInput
+            // workPeriodSetting
             // 
-            this.restartTimeInput.CustomFormat = "mmm:ss";
-            this.restartTimeInput.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.restartTimeInput.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
-            this.restartTimeInput.Location = new System.Drawing.Point(170, 17);
-            this.restartTimeInput.Name = "restartTimeInput";
-            this.restartTimeInput.ShowUpDown = true;
-            this.restartTimeInput.Size = new System.Drawing.Size(107, 23);
-            this.restartTimeInput.TabIndex = 19;
-            this.restartTimeInput.Value = new System.DateTime(2020, 10, 13, 0, 0, 0, 0);
+            this.workPeriodSetting.CustomFormat = "mmm:ss";
+            this.workPeriodSetting.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.workPeriodSetting.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
+            this.workPeriodSetting.Location = new System.Drawing.Point(170, 17);
+            this.workPeriodSetting.Name = "workPeriodSetting";
+            this.workPeriodSetting.ShowUpDown = true;
+            this.workPeriodSetting.Size = new System.Drawing.Size(107, 23);
+            this.workPeriodSetting.TabIndex = 19;
+            this.workPeriodSetting.Value = new System.DateTime(2020, 10, 13, 0, 0, 0, 0);
             // 
-            // dateTimePicker1
+            // restPeriodSetting
             // 
-            this.dateTimePicker1.CustomFormat = "mmm:ss";
-            this.dateTimePicker1.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.dateTimePicker1.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
-            this.dateTimePicker1.Location = new System.Drawing.Point(170, 53);
-            this.dateTimePicker1.Name = "dateTimePicker1";
-            this.dateTimePicker1.ShowUpDown = true;
-            this.dateTimePicker1.Size = new System.Drawing.Size(107, 23);
-            this.dateTimePicker1.TabIndex = 20;
-            this.dateTimePicker1.Value = new System.DateTime(2020, 10, 13, 0, 0, 0, 0);
+            this.restPeriodSetting.CustomFormat = "mmm:ss";
+            this.restPeriodSetting.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.restPeriodSetting.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
+            this.restPeriodSetting.Location = new System.Drawing.Point(170, 53);
+            this.restPeriodSetting.Name = "restPeriodSetting";
+            this.restPeriodSetting.ShowUpDown = true;
+            this.restPeriodSetting.Size = new System.Drawing.Size(107, 23);
+            this.restPeriodSetting.TabIndex = 20;
+            this.restPeriodSetting.Value = new System.DateTime(2020, 10, 13, 0, 0, 0, 0);
             // 
-            // checkBox5
+            // periodEndStopSetting
             // 
-            this.checkBox5.AutoSize = true;
-            this.checkBox5.Checked = true;
-            this.checkBox5.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBox5.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.checkBox5.Location = new System.Drawing.Point(15, 120);
-            this.checkBox5.Name = "checkBox5";
-            this.checkBox5.Size = new System.Drawing.Size(183, 21);
-            this.checkBox5.TabIndex = 21;
-            this.checkBox5.Text = "Stop timer on period end";
-            this.checkBox5.UseVisualStyleBackColor = true;
+            this.periodEndStopSetting.AutoSize = true;
+            this.periodEndStopSetting.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.periodEndStopSetting.Location = new System.Drawing.Point(15, 120);
+            this.periodEndStopSetting.Name = "periodEndStopSetting";
+            this.periodEndStopSetting.Size = new System.Drawing.Size(183, 21);
+            this.periodEndStopSetting.TabIndex = 21;
+            this.periodEndStopSetting.Text = "Stop timer on period end";
+            this.periodEndStopSetting.UseVisualStyleBackColor = true;
+            this.periodEndStopSetting.CheckedChanged += new System.EventHandler(this.periodEndStopSetting_CheckedChanged);
             // 
             // Form2
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(298, 362);
-            this.Controls.Add(this.checkBox5);
-            this.Controls.Add(this.dateTimePicker1);
-            this.Controls.Add(this.restartTimeInput);
-            this.Controls.Add(this.button2);
-            this.Controls.Add(this.button1);
-            this.Controls.Add(this.textBox1);
-            this.Controls.Add(this.label7);
-            this.Controls.Add(this.checkBox4);
-            this.Controls.Add(this.checkBox3);
-            this.Controls.Add(this.label6);
-            this.Controls.Add(this.numericUpDown5);
-            this.Controls.Add(this.label5);
-            this.Controls.Add(this.checkBox2);
-            this.Controls.Add(this.checkBox1);
+            this.Controls.Add(this.periodEndStopSetting);
+            this.Controls.Add(this.restPeriodSetting);
+            this.Controls.Add(this.workPeriodSetting);
+            this.Controls.Add(this.cancelSetting);
+            this.Controls.Add(this.saveSetting);
+            this.Controls.Add(this.globalStartKeySetting);
+            this.Controls.Add(this.globalStartKeyLabel);
+            this.Controls.Add(this.globalStartSetting);
+            this.Controls.Add(this.windowFlashSetting);
+            this.Controls.Add(this.remindSecondsLabel2);
+            this.Controls.Add(this.remindSecondsSetting);
+            this.Controls.Add(this.remindSecondsLabel1);
+            this.Controls.Add(this.remindSetting);
+            this.Controls.Add(this.periodEndSoundSetting);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.label1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Form2";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Settings";
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown5)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.remindSecondsSetting)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -264,19 +269,19 @@
 
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.CheckBox checkBox1;
-        private System.Windows.Forms.CheckBox checkBox2;
-        private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.NumericUpDown numericUpDown5;
-        private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.CheckBox checkBox3;
-        private System.Windows.Forms.CheckBox checkBox4;
-        private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.TextBox textBox1;
-        private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.Button button2;
-        private System.Windows.Forms.DateTimePicker restartTimeInput;
-        private System.Windows.Forms.DateTimePicker dateTimePicker1;
-        private System.Windows.Forms.CheckBox checkBox5;
+        private System.Windows.Forms.CheckBox periodEndSoundSetting;
+        private System.Windows.Forms.CheckBox remindSetting;
+        private System.Windows.Forms.Label remindSecondsLabel1;
+        private System.Windows.Forms.NumericUpDown remindSecondsSetting;
+        private System.Windows.Forms.Label remindSecondsLabel2;
+        private System.Windows.Forms.CheckBox windowFlashSetting;
+        private System.Windows.Forms.CheckBox globalStartSetting;
+        private System.Windows.Forms.Label globalStartKeyLabel;
+        private System.Windows.Forms.TextBox globalStartKeySetting;
+        private System.Windows.Forms.Button saveSetting;
+        private System.Windows.Forms.Button cancelSetting;
+        private System.Windows.Forms.DateTimePicker workPeriodSetting;
+        private System.Windows.Forms.DateTimePicker restPeriodSetting;
+        private System.Windows.Forms.CheckBox periodEndStopSetting;
     }
 }

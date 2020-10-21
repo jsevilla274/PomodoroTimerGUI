@@ -7,7 +7,7 @@ namespace PomodoroTimerForm
     /// <summary>
     /// Low-Level Keyboard Hooks
     /// </summary>
-    /// Credit to Stephen Toub for the majority of this implementation, the original found here:
+    /// Credit to Stephen Toub for the majority of this implementation, the original found here
     /// https://web.archive.org/web/20190828074433/https://blogs.msdn.microsoft.com/toub/2006/05/03/low-level-keyboard-hook-in-c/
     public static class InterceptKeys
     {

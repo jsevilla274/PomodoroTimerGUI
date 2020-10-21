@@ -82,5 +82,77 @@ namespace PomodoroTimerForm.Properties {
                 this["RemindSeconds"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool PeriodEndSound {
+            get {
+                return ((bool)(this["PeriodEndSound"]));
+            }
+            set {
+                this["PeriodEndSound"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool PeriodEndStop {
+            get {
+                return ((bool)(this["PeriodEndStop"]));
+            }
+            set {
+                this["PeriodEndStop"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool Remind {
+            get {
+                return ((bool)(this["Remind"]));
+            }
+            set {
+                this["Remind"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool GlobalStart {
+            get {
+                return ((bool)(this["GlobalStart"]));
+            }
+            set {
+                this["GlobalStart"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool WindowFlash {
+            get {
+                return ((bool)(this["WindowFlash"]));
+            }
+            set {
+                this["WindowFlash"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Ins")]
+        public global::System.Windows.Forms.Keys GlobalStartKey {
+            get {
+                return ((global::System.Windows.Forms.Keys)(this["GlobalStartKey"]));
+            }
+            set {
+                this["GlobalStartKey"] = value;
+            }
+        }
     }
 }

@@ -3,6 +3,11 @@ using System.Runtime.InteropServices;
 
 namespace PomodoroTimerForm
 {
+    /// <summary>
+    /// Flash Window in Taskbar via Win32 FlashWindowEx
+    /// </summary>
+    /// Credit to Chris Pietschmann for this implementation, his breakdown found here
+    /// https://pietschsoft.com/post/2009/01/26/csharp-flash-window-in-taskbar-via-win32-flashwindowex
     public static class WinFlash
     {
         [DllImport("user32.dll")]

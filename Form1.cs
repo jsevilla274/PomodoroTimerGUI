@@ -14,18 +14,23 @@ namespace PomodoroTimerForm
     public partial class Form1 : Form
     {
         // Work default values
-        int WorkPeriodMinutes = Properties.Settings.Default.WorkPeriodMinutes;
-        int WorkPeriodSeconds = Properties.Settings.Default.WorkPeriodSeconds;
+        public int WorkPeriodMinutes = Properties.Settings.Default.WorkPeriodMinutes;
+        public int WorkPeriodSeconds = Properties.Settings.Default.WorkPeriodSeconds;
         const string WorkPeriodLabel = "Work";
 
         // Rest default values
-        int RestPeriodMinutes = Properties.Settings.Default.RestPeriodMinutes;
-        int RestPeriodSeconds = Properties.Settings.Default.RestPeriodSeconds;
+        public int RestPeriodMinutes = Properties.Settings.Default.RestPeriodMinutes;
+        public int RestPeriodSeconds = Properties.Settings.Default.RestPeriodSeconds;
         const string RestPeriodLabel = "Rest";
 
         // Other defaults
-        int DefaultRemindSeconds = Properties.Settings.Default.RemindSeconds;
-        const int INSERT_KEYCODE = 45;
+        public int RemindSecondsDefault = Properties.Settings.Default.RemindSeconds;
+        public bool RemindEnabled = Properties.Settings.Default.Remind;
+        public bool PeriodEndSoundEnabled = Properties.Settings.Default.PeriodEndSound;
+        public bool PeriodEndStopEnabled = Properties.Settings.Default.PeriodEndStop;
+        public bool GlobalStartEnabled = Properties.Settings.Default.GlobalStart;
+        public Keys GlobalStartKey = Properties.Settings.Default.GlobalStartKey;
+        public bool WindowFlashEnabled = Properties.Settings.Default.WindowFlash;
 
         enum Period
         {
@@ -36,7 +41,6 @@ namespace PomodoroTimerForm
         int PeriodMinutes, PeriodSeconds, RemindSeconds;
         Period PeriodCurrent;
         bool TimerRunning = false;
-        bool HaltTimerOnPeriodEnd = true;
         bool HiddenInSystemTray = false;
         SoundPlayer PeriodEndSound, RemindSound;
 
@@ -95,7 +99,7 @@ namespace PomodoroTimerForm
             }
             else
             {
-                Console.WriteLine("ERROR, Bad period passed to ChangePeriodTo");
+                Console.WriteLine("ERROR: Bad period passed to ChangePeriodTo");
             }
         }
 
@@ -127,13 +131,13 @@ namespace PomodoroTimerForm
 
         private void OnKeyIntercept(int keyCode)
         {
-            if (keyCode == INSERT_KEYCODE)
+            if (keyCode == (int)GlobalStartKey)
             {
                 if (!TimerRunning)
                 {
                     StartTimerAndDisplay();
                     RemindSound.Play();
-                    // CONSIDER: WinFlash.StopFlashingWindow(this.Handle); // Does not lower taskbar though
+                    // WinFlash.StopFlashingWindow(this.Handle); // Does not lower taskbar
                 }
             }
         }
@@ -189,36 +193,50 @@ namespace PomodoroTimerForm
                 }
                 else
                 {
-                    // This is an error state
+                    Console.WriteLine("ERROR: Current period not recognized");
                     periodTimer.Stop();
                 }
 
-                if (HaltTimerOnPeriodEnd)
+                if (PeriodEndStopEnabled)
                 {
                     StopTimerAndDisplay();
-                    if (HiddenInSystemTray) //TODO: Make it optional to pop it up with flash
-                    {
-                        // unhide window from system tray
-                        Show();
-                        HiddenInSystemTray = false;
-                        //this.WindowState = FormWindowState.Minimized;
-                        //notifyIcon.Visible = false;
-                    }
+                    startpauseButton.Select();
+                }
 
-                    // Make notify user of period end (Taskbar icon flash & sound)
-                    WinFlash.FlashWindow(this.Handle, WinFlash.FlashWindowFlags.FLASHW_ALL |
-                            WinFlash.FlashWindowFlags.FLASHW_TIMERNOFG); //TODO: Make window flash optional later
-                    PeriodEndSound.Play();
-                    // CONSIDER: bring extra attention startend button by selecting it?
+                if (HiddenInSystemTray) // unhide window from system tray
+                {
+                    Show();
+                    HiddenInSystemTray = false;
+                }
 
-                    // Activate Reminder Sound
-                    RemindSeconds = DefaultRemindSeconds;
-                    remindSoundTimer.Start();
-
-                    // Enable keyboard hook for "global" start key
+                if (GlobalStartEnabled) // start keyboard hook for start key
+                {
                     InterceptKeys.Start(OnKeyIntercept);
                 }
+
+                if (WindowFlashEnabled) // flash taskbar icon orange
+                {
+                    WinFlash.FlashWindow(this.Handle, WinFlash.FlashWindowFlags.FLASHW_ALL |
+                        WinFlash.FlashWindowFlags.FLASHW_TIMERNOFG);
+                }
+
+                if (PeriodEndSoundEnabled)
+                {
+                    PeriodEndSound.Play();
+                }
+
+                if (RemindEnabled)  // start Remind sound timer
+                {
+                    RemindSeconds = RemindSecondsDefault;
+                    remindSoundTimer.Start();
+                }
             }
+        }
+
+        private void settingsButton_Click(object sender, EventArgs e)
+        {
+            Form settingsForm = new Form2(this);
+            settingsForm.ShowDialog();
         }
 
         private void nextButton_Click(object sender, EventArgs e)
@@ -250,18 +268,9 @@ namespace PomodoroTimerForm
             else
             {
                 RemindSound.Play();
-                RemindSeconds = DefaultRemindSeconds;
+                RemindSeconds = RemindSecondsDefault;
             }
         }
-
-        //private void Form1_Resize(object sender, EventArgs e)
-        //{
-        //    if (this.WindowState == FormWindowState.Minimized)
-        //    {
-        //        Hide();
-        //        notifyIcon.Visible = true;
-        //    }
-        //}
 
         private void notifyIcon_MouseClick(object sender, MouseEventArgs e)
         {
@@ -269,14 +278,12 @@ namespace PomodoroTimerForm
             {
                 Show();
                 this.WindowState = FormWindowState.Normal;
-                //notifyIcon.Visible = false;
                 HiddenInSystemTray = false;
             }
             else
             {
                 Hide();
                 HiddenInSystemTray = true;
-                //notifyIcon.Visible = true;
             }
         }
     }

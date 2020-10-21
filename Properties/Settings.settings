@@ -17,5 +17,23 @@
     <Setting Name="RemindSeconds" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">45</Value>
     </Setting>
+    <Setting Name="PeriodEndSound" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="PeriodEndStop" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="Remind" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="GlobalStart" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="WindowFlash" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="GlobalStartKey" Type="System.Windows.Forms.Keys" Scope="User">
+      <Value Profile="(Default)">Ins</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
