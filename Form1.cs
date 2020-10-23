@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Media;
@@ -38,11 +39,20 @@ namespace PomodoroTimerForm
             Rest,
         }
 
+        enum TimerState
+        {
+            Start,
+            End,
+            Pause,
+            Resume,
+        }
+
         int PeriodMinutes, PeriodSeconds, RemindSeconds;
         Period PeriodCurrent;
         bool TimerRunning = false;
         bool HiddenInSystemTray = false;
         SoundPlayer PeriodEndSound, RemindSound;
+        List<string> TimerLog;
 
         public Form1()
         {
@@ -56,12 +66,14 @@ namespace PomodoroTimerForm
             RemindSound.Stream = Properties.Resources.Ding;
         }
 
-        private void UpdateStartEndTimeDisplay()
+        private void DisplayStartEndTimes()
         {
             DateTime startTime = DateTime.Now;
             DateTime endTime = startTime.AddMinutes(PeriodMinutes).AddSeconds(PeriodSeconds);
             startTimeDisplay.Text = "Start: " + startTime.ToString("h:mm tt");
             endTimeDisplay.Text = "End: " + endTime.ToString("h:mm tt");
+            startTimeDisplay.Visible = true;
+            endTimeDisplay.Visible = true;
         }
 
         private string FormatPeriodTime(int minutes, int seconds)
@@ -82,8 +94,8 @@ namespace PomodoroTimerForm
                 // update GUI elements
                 periodLabelDisplay.Text = "- " + WorkPeriodLabel + " -";
                 timeDisplay.Text = FormatPeriodTime(WorkPeriodMinutes, WorkPeriodSeconds);
-                restartTimeInput.Value = new DateTime(2000, 1, 1, 1, WorkPeriodMinutes, WorkPeriodSeconds);
-                UpdateStartEndTimeDisplay();
+                restartTimeInput.Value = new DateTime(2000, 1, 1, 1, WorkPeriodMinutes, 
+                    WorkPeriodSeconds);
             }
             else if (p == Period.Rest)
             {
@@ -94,13 +106,37 @@ namespace PomodoroTimerForm
                 // update GUI elements
                 periodLabelDisplay.Text = "- " + RestPeriodLabel + " -";
                 timeDisplay.Text = FormatPeriodTime(RestPeriodMinutes, RestPeriodSeconds);
-                restartTimeInput.Value = new DateTime(2000, 1, 1, 1, RestPeriodMinutes, RestPeriodSeconds);
-                UpdateStartEndTimeDisplay();
+                restartTimeInput.Value = new DateTime(2000, 1, 1, 1, RestPeriodMinutes, 
+                    RestPeriodSeconds);
             }
             else
             {
-                Console.WriteLine("ERROR: Bad period passed to ChangePeriodTo");
+                Debug.WriteLine("ERROR: Bad period passed to ChangePeriodTo");
             }
+        }
+
+        private void LogTimer(TimerState state, Object currDateTime=null)
+        {
+            DateTime currTime = (currDateTime != null ? (DateTime)currDateTime : DateTime.Now);
+            string stateMsg = "";
+            if (state == TimerState.Start)
+            {
+                stateMsg = "period started";
+            }
+            else if (state == TimerState.End)
+            {
+                stateMsg = "period ended";
+            }
+            else if (state == TimerState.Resume)
+            {
+                stateMsg = "period resumed";
+            }
+            else if (state == TimerState.Pause)
+            {
+                stateMsg = "period paused";
+            }
+            TimerLog.Add(currTime.ToString("h:mm:ss tt") + " " + PeriodCurrent.ToString() + 
+                " " + stateMsg);
         }
 
         private void StartTimerAndDisplay()
@@ -117,9 +153,7 @@ namespace PomodoroTimerForm
             InterceptKeys.Stop();
 
             // Display start and end time of the period on the GUI
-            UpdateStartEndTimeDisplay();
-            startTimeDisplay.Visible = true;
-            endTimeDisplay.Visible = true;
+            DisplayStartEndTimes();
         }
 
         private void StopTimerAndDisplay()
@@ -127,6 +161,8 @@ namespace PomodoroTimerForm
             periodTimer.Stop();
             startpauseButton.Text = "Start";
             TimerRunning = false;
+            startTimeDisplay.Visible = false;
+            endTimeDisplay.Visible = false;
         }
 
         private void OnKeyIntercept(int keyCode)
@@ -147,10 +183,14 @@ namespace PomodoroTimerForm
             if (TimerRunning)
             {
                 StopTimerAndDisplay();
+                // log pause here
             }
             else
             {
                 StartTimerAndDisplay();
+                // log period start 
+                // log resume iff periodminutes is less than defaultminutes
+                // NOTE: A 0-minute default
             }
         }
 
@@ -166,6 +206,7 @@ namespace PomodoroTimerForm
             PeriodSeconds = input.Second;
             timeDisplay.Text = FormatPeriodTime(PeriodMinutes, PeriodSeconds);
             StartTimerAndDisplay();
+            // log restart here
         }
 
         private void periodTimer_Tick(object sender, EventArgs e)
@@ -183,6 +224,7 @@ namespace PomodoroTimerForm
             }
             else
             {
+                // log period end here
                 if (PeriodCurrent == Period.Work)
                 {
                     ChangePeriodTo(Period.Rest);
@@ -193,7 +235,7 @@ namespace PomodoroTimerForm
                 }
                 else
                 {
-                    Console.WriteLine("ERROR: Current period not recognized");
+                    Debug.WriteLine("ERROR: Current period not recognized");
                     periodTimer.Stop();
                 }
 
@@ -202,11 +244,10 @@ namespace PomodoroTimerForm
                     StopTimerAndDisplay();
                     startpauseButton.Select();
                 }
-
-                if (HiddenInSystemTray) // unhide window from system tray
+                else
                 {
-                    Show();
-                    HiddenInSystemTray = false;
+                    // log period start here
+                    DisplayStartEndTimes();
                 }
 
                 if (GlobalStartEnabled) // start keyboard hook for start key
@@ -214,8 +255,15 @@ namespace PomodoroTimerForm
                     InterceptKeys.Start(OnKeyIntercept);
                 }
 
-                if (WindowFlashEnabled) // flash taskbar icon orange
+                if (WindowFlashEnabled) 
                 {
+                    if (HiddenInSystemTray) // unhide window from system tray
+                    {
+                        Show();
+                        HiddenInSystemTray = false;
+                    }
+
+                    // flash taskbar icon orange
                     WinFlash.FlashWindow(this.Handle, WinFlash.FlashWindowFlags.FLASHW_ALL |
                         WinFlash.FlashWindowFlags.FLASHW_TIMERNOFG);
                 }
@@ -252,6 +300,12 @@ namespace PomodoroTimerForm
             else
             {
                 periodTimer.Stop();
+            }
+
+            if (TimerRunning)
+            {
+                DisplayStartEndTimes();
+                // log new period start here?
             }
         }
 
