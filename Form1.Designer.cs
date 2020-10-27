@@ -42,6 +42,7 @@
             this.endTimeDisplay = new System.Windows.Forms.Label();
             this.periodLabelDisplay = new System.Windows.Forms.Label();
             this.remindSoundTimer = new System.Windows.Forms.Timer(this.components);
+            this.logButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // timeDisplay
@@ -90,7 +91,7 @@
             // settingsButton
             // 
             this.settingsButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.settingsButton.Location = new System.Drawing.Point(124, 245);
+            this.settingsButton.Location = new System.Drawing.Point(209, 241);
             this.settingsButton.Name = "settingsButton";
             this.settingsButton.Size = new System.Drawing.Size(142, 38);
             this.settingsButton.TabIndex = 6;
@@ -159,11 +160,23 @@
             this.remindSoundTimer.Interval = 1000;
             this.remindSoundTimer.Tick += new System.EventHandler(this.remindSoundTimer_Tick);
             // 
+            // logButton
+            // 
+            this.logButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.logButton.Location = new System.Drawing.Point(35, 241);
+            this.logButton.Name = "logButton";
+            this.logButton.Size = new System.Drawing.Size(142, 38);
+            this.logButton.TabIndex = 10;
+            this.logButton.Text = "Log";
+            this.logButton.UseVisualStyleBackColor = true;
+            this.logButton.Click += new System.EventHandler(this.logButton_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(384, 296);
+            this.Controls.Add(this.logButton);
             this.Controls.Add(this.periodLabelDisplay);
             this.Controls.Add(this.endTimeDisplay);
             this.Controls.Add(this.startTimeDisplay);
@@ -194,6 +207,7 @@
         private System.Windows.Forms.Label endTimeDisplay;
         private System.Windows.Forms.Label periodLabelDisplay;
         private System.Windows.Forms.Timer remindSoundTimer;
+        private System.Windows.Forms.Button logButton;
     }
 }
 

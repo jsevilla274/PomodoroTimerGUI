@@ -44,7 +44,7 @@ namespace PomodoroTimerForm
             Start,
             End,
             Pause,
-            Resume,
+            Restart,
         }
 
         int PeriodMinutes, PeriodSeconds, RemindSeconds;
@@ -52,7 +52,7 @@ namespace PomodoroTimerForm
         bool TimerRunning = false;
         bool HiddenInSystemTray = false;
         SoundPlayer PeriodEndSound, RemindSound;
-        List<string> TimerLog;
+        List<string> PeriodLog;
 
         public Form1()
         {
@@ -64,6 +64,8 @@ namespace PomodoroTimerForm
             PeriodEndSound.Stream = Properties.Resources.LingeringBells;
             RemindSound = new SoundPlayer();
             RemindSound.Stream = Properties.Resources.Ding;
+
+            PeriodLog = new List<string>();
         }
 
         private void DisplayStartEndTimes()
@@ -76,13 +78,16 @@ namespace PomodoroTimerForm
             endTimeDisplay.Visible = true;
         }
 
-        private string FormatPeriodTime(int minutes, int seconds)
+        private string FormatTime(int minutes, int seconds)
         {
             string minStr = (minutes < 10) ? "0" + minutes.ToString() : minutes.ToString();
             string secStr = (seconds < 10) ? "0" + seconds.ToString() : seconds.ToString();
             return minStr + ':' + secStr;
         }
 
+        // what if changeperiodto also had the ability to displaystartendtimes? better, what if
+        // we decoupled the GUI changing abilities of changeperiodto and madea new function with
+        // display startendtimes that was in charge of only updating the gui after a period change?
         private void ChangePeriodTo(Period p)
         {
             if (p == Period.Work)
@@ -93,7 +98,7 @@ namespace PomodoroTimerForm
 
                 // update GUI elements
                 periodLabelDisplay.Text = "- " + WorkPeriodLabel + " -";
-                timeDisplay.Text = FormatPeriodTime(WorkPeriodMinutes, WorkPeriodSeconds);
+                timeDisplay.Text = FormatTime(WorkPeriodMinutes, WorkPeriodSeconds);
                 restartTimeInput.Value = new DateTime(2000, 1, 1, 1, WorkPeriodMinutes, 
                     WorkPeriodSeconds);
             }
@@ -105,7 +110,7 @@ namespace PomodoroTimerForm
 
                 // update GUI elements
                 periodLabelDisplay.Text = "- " + RestPeriodLabel + " -";
-                timeDisplay.Text = FormatPeriodTime(RestPeriodMinutes, RestPeriodSeconds);
+                timeDisplay.Text = FormatTime(RestPeriodMinutes, RestPeriodSeconds);
                 restartTimeInput.Value = new DateTime(2000, 1, 1, 1, RestPeriodMinutes, 
                     RestPeriodSeconds);
             }
@@ -115,31 +120,63 @@ namespace PomodoroTimerForm
             }
         }
 
-        private void LogTimer(TimerState state, Object currDateTime=null)
+        private void LogPeriod(TimerState state)
         {
-            DateTime currTime = (currDateTime != null ? (DateTime)currDateTime : DateTime.Now);
             string stateMsg = "";
             if (state == TimerState.Start)
             {
-                stateMsg = "period started";
+                int defaultMinutes = 0;
+                int defaultSeconds = 0;
+                if (PeriodCurrent == Period.Work)
+                {
+                    defaultMinutes = WorkPeriodMinutes;
+                    defaultSeconds = WorkPeriodSeconds;
+
+                }
+                else if (PeriodCurrent == Period.Rest)
+                {
+                    defaultMinutes = RestPeriodMinutes;
+                    defaultSeconds = RestPeriodSeconds;
+                }
+
+                if (PeriodMinutes < defaultMinutes || (PeriodMinutes == defaultMinutes &&
+                    PeriodSeconds < defaultSeconds))
+                {
+                    stateMsg = "period resumed";
+                }
+                else
+                {
+                    stateMsg = "period started";
+                }
+
+                stateMsg += " (" + FormatTime(PeriodMinutes, PeriodSeconds) + ")";
+            }
+            else if (state == TimerState.Restart)
+            {
+                stateMsg = "period restarted (" + FormatTime(PeriodMinutes, PeriodSeconds) + ")";
             }
             else if (state == TimerState.End)
             {
                 stateMsg = "period ended";
             }
-            else if (state == TimerState.Resume)
-            {
-                stateMsg = "period resumed";
-            }
             else if (state == TimerState.Pause)
             {
                 stateMsg = "period paused";
             }
-            TimerLog.Add(currTime.ToString("h:mm:ss tt") + " " + PeriodCurrent.ToString() + 
+
+            // cull the list if exceeding some specified amount of entries
+            if (PeriodLog.Count > 100)
+            {
+                PeriodLog.RemoveRange(0, 90);
+            }
+
+            // add the entry to the log
+            PeriodLog.Add(DateTime.Now.ToString("h:mm:ss tt") + " " + PeriodCurrent.ToString() +
                 " " + stateMsg);
+            // TODO: we'll probably want to pass this data to Form3 as well
         }
 
-        private void StartTimerAndDisplay()
+        private void StartAndDisplayTimer()
         {
             periodTimer.Start();
             startpauseButton.Text = "Pause";
@@ -156,11 +193,13 @@ namespace PomodoroTimerForm
             DisplayStartEndTimes();
         }
 
-        private void StopTimerAndDisplay()
+        private void StopAndDisplayTimer()
         {
             periodTimer.Stop();
             startpauseButton.Text = "Start";
             TimerRunning = false;
+
+            // remove start and end time of period from GUI
             startTimeDisplay.Visible = false;
             endTimeDisplay.Visible = false;
         }
@@ -171,7 +210,8 @@ namespace PomodoroTimerForm
             {
                 if (!TimerRunning)
                 {
-                    StartTimerAndDisplay();
+                    LogPeriod(TimerState.Start);
+                    StartAndDisplayTimer();
                     RemindSound.Play();
                     // WinFlash.StopFlashingWindow(this.Handle); // Does not lower taskbar
                 }
@@ -182,15 +222,14 @@ namespace PomodoroTimerForm
         {
             if (TimerRunning)
             {
-                StopTimerAndDisplay();
-                // log pause here
+                // log pause before stopping timer
+                LogPeriod(TimerState.Pause);
+                StopAndDisplayTimer();
             }
             else
             {
-                StartTimerAndDisplay();
-                // log period start 
-                // log resume iff periodminutes is less than defaultminutes
-                // NOTE: A 0-minute default
+                LogPeriod(TimerState.Start);
+                StartAndDisplayTimer();
             }
         }
 
@@ -204,9 +243,9 @@ namespace PomodoroTimerForm
             DateTime input = restartTimeInput.Value;
             PeriodMinutes = input.Minute;
             PeriodSeconds = input.Second;
-            timeDisplay.Text = FormatPeriodTime(PeriodMinutes, PeriodSeconds);
-            StartTimerAndDisplay();
-            // log restart here
+            timeDisplay.Text = FormatTime(PeriodMinutes, PeriodSeconds);
+            LogPeriod(TimerState.Restart);
+            StartAndDisplayTimer();
         }
 
         private void periodTimer_Tick(object sender, EventArgs e)
@@ -214,17 +253,24 @@ namespace PomodoroTimerForm
             if (PeriodSeconds > 0)
             {
                 PeriodSeconds--;
-                timeDisplay.Text = FormatPeriodTime(PeriodMinutes, PeriodSeconds);
+                timeDisplay.Text = FormatTime(PeriodMinutes, PeriodSeconds);
             }
             else if (PeriodMinutes > 0)
             {
                 PeriodMinutes--;
                 PeriodSeconds = 59;
-                timeDisplay.Text = FormatPeriodTime(PeriodMinutes, PeriodSeconds);
+                timeDisplay.Text = FormatTime(PeriodMinutes, PeriodSeconds);
             }
             else
             {
-                // log period end here
+                if (PeriodEndStopEnabled)
+                {
+                    // we need to log the period end before changing the period
+                    LogPeriod(TimerState.End);
+                    StopAndDisplayTimer();
+                    startpauseButton.Select();  // highlight the startpause button
+                }
+
                 if (PeriodCurrent == Period.Work)
                 {
                     ChangePeriodTo(Period.Rest);
@@ -239,14 +285,10 @@ namespace PomodoroTimerForm
                     periodTimer.Stop();
                 }
 
-                if (PeriodEndStopEnabled)
+                if (!PeriodEndStopEnabled)
                 {
-                    StopTimerAndDisplay();
-                    startpauseButton.Select();
-                }
-                else
-                {
-                    // log period start here
+                    // "start" the following period
+                    LogPeriod(TimerState.Start);
                     DisplayStartEndTimes();
                 }
 
@@ -273,8 +315,9 @@ namespace PomodoroTimerForm
                     PeriodEndSound.Play();
                 }
 
-                if (RemindEnabled)  // start Remind sound timer
+                if (RemindEnabled)  
                 {
+                    // activate remind sound timer
                     RemindSeconds = RemindSecondsDefault;
                     remindSoundTimer.Start();
                 }
@@ -285,6 +328,12 @@ namespace PomodoroTimerForm
         {
             Form settingsForm = new Form2(this);
             settingsForm.ShowDialog();
+        }
+
+        private void logButton_Click(object sender, EventArgs e)
+        {
+            Form logForm = new Form3(PeriodLog);
+            logForm.Show();
         }
 
         private void nextButton_Click(object sender, EventArgs e)
@@ -304,8 +353,8 @@ namespace PomodoroTimerForm
 
             if (TimerRunning)
             {
+                LogPeriod(TimerState.Start);
                 DisplayStartEndTimes();
-                // log new period start here?
             }
         }
 
@@ -332,6 +381,7 @@ namespace PomodoroTimerForm
             {
                 Show();
                 this.WindowState = FormWindowState.Normal;
+                //this.Active()?
                 HiddenInSystemTray = false;
             }
             else
