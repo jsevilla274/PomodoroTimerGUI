@@ -11,14 +11,14 @@ using System.Windows.Forms;
 
 namespace PomodoroTimerForm
 {
-    public partial class Form2 : Form
+    public partial class SettingsForm : Form
     {
         private DateTime _workPeriodSaved, _restPeriodSaved;
-        private Form1 _parentForm;
-        private bool _globalStartEdit = false;
+        private MainForm _parentForm;
+        private bool _globalStartEditing = false;
         private Keys _globalStartKeyCurrent;
 
-        public Form2(Form1 parent)
+        public SettingsForm(MainForm parent)
         {
             _parentForm = parent;
             InitializeComponent();
@@ -43,28 +43,45 @@ namespace PomodoroTimerForm
             restPeriodSetting.Value = _restPeriodSaved;
             periodEndSoundSetting.Checked = Properties.Settings.Default.PeriodEndSound;
 
-            if (Properties.Settings.Default.PeriodEndStop)
-            {
-                periodEndStopSetting.Checked = true;
-                remindSetting.Enabled = true;
-                globalStartSetting.Enabled = true;
-            }
-
-            if (Properties.Settings.Default.Remind)
-            {
-                remindSetting.Checked = true;
-                remindSecondsLabel1.Enabled = true;
-                remindSecondsSetting.Enabled = true;
-                remindSecondsLabel2.Enabled = true;
-            }
+            remindSetting.Checked = Properties.Settings.Default.Remind;
             remindSecondsSetting.Value = Properties.Settings.Default.RemindSeconds;
             globalStartSetting.Checked = Properties.Settings.Default.GlobalStart;
             globalStartKeySetting.Text = _globalStartKeyCurrent.ToString();
+            periodEndStopSetting.Checked = Properties.Settings.Default.PeriodEndStop;
+            periodEndStopSetting_CheckedChanged(null, null);
+           
             windowFlashSetting.Checked = Properties.Settings.Default.WindowFlash;
         }
 
-        private void UpdateSettings()
-        { 
+        private void periodEndStopSetting_CheckedChanged(object sender, EventArgs e)
+        {
+            bool enable = periodEndStopSetting.Checked;
+            remindSetting.Enabled = enable;
+            remindSecondsLabel1.Enabled = enable && remindSetting.Checked;
+            remindSecondsSetting.Enabled = enable && remindSetting.Checked;
+            remindSecondsLabel2.Enabled = enable && remindSetting.Checked;
+            globalStartSetting.Enabled = enable;
+            globalStartKeyLabel.Enabled = enable && globalStartSetting.Checked;
+            globalStartKeySetting.Enabled = enable && globalStartSetting.Checked;
+        }
+
+        private void remindSetting_CheckedChanged(object sender, EventArgs e)
+        {
+            bool enable = remindSetting.Checked;
+            remindSecondsLabel1.Enabled = enable;
+            remindSecondsSetting.Enabled = enable;
+            remindSecondsLabel2.Enabled = enable;
+        }
+
+        private void globalStartSetting_CheckedChanged(object sender, EventArgs e)
+        {
+            bool enable = globalStartSetting.Checked;
+            globalStartKeyLabel.Enabled = enable;
+            globalStartKeySetting.Enabled = enable;
+        }
+
+        private void saveSetting_Click(object sender, EventArgs e)
+        {
             if (workPeriodSetting.Value != _workPeriodSaved)
             {
                 Properties.Settings.Default.WorkPeriodMinutes = workPeriodSetting.Value.Minute;
@@ -122,53 +139,23 @@ namespace PomodoroTimerForm
                 Properties.Settings.Default.WindowFlash = windowFlashSetting.Checked;
                 _parentForm.WindowFlashEnabled = windowFlashSetting.Checked;
             }
-        }
 
-        private void periodEndStopSetting_CheckedChanged(object sender, EventArgs e)
-        {
-            bool enable = periodEndStopSetting.Checked;
-            remindSetting.Enabled = enable;
-            remindSecondsLabel1.Enabled = enable && remindSetting.Checked;
-            remindSecondsSetting.Enabled = enable && remindSetting.Checked;
-            remindSecondsLabel2.Enabled = enable && remindSetting.Checked;
-            globalStartSetting.Enabled = enable;
-            globalStartKeyLabel.Enabled = enable && globalStartSetting.Checked;
-            globalStartKeySetting.Enabled = enable && globalStartSetting.Checked;
-        }
-
-        private void remindSetting_CheckedChanged(object sender, EventArgs e)
-        {
-            bool enable = remindSetting.Checked;
-            remindSecondsLabel1.Enabled = enable;
-            remindSecondsSetting.Enabled = enable;
-            remindSecondsLabel2.Enabled = enable;
-        }
-
-        private void globalStartSetting_CheckedChanged(object sender, EventArgs e)
-        {
-            bool enable = globalStartSetting.Checked;
-            globalStartKeyLabel.Enabled = enable;
-            globalStartKeySetting.Enabled = enable;
-        }
-
-        private void saveSetting_Click(object sender, EventArgs e)
-        {
-            UpdateSettings();
+            // close form and save settings to file
             this.Close();
             Properties.Settings.Default.Save();
         }
 
         private void globalStartKeySetting_Click(object sender, EventArgs e)
         {
-            _globalStartEdit = true;
+            _globalStartEditing = true;
             globalStartKeySetting.Text = "Press any key";
         }
 
         private void globalStartKeySetting_KeyDown(object sender, KeyEventArgs e)
         {
-            if (_globalStartEdit)
+            if (_globalStartEditing)
             {
-                _globalStartEdit = false;
+                _globalStartEditing = false;
                 _globalStartKeyCurrent = e.KeyCode;
                 globalStartKeySetting.Text = e.KeyCode.ToString();
             }

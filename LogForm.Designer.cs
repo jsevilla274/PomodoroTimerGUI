@@ -1,6 +1,6 @@
 ﻿namespace PomodoroTimerForm
 {
-    partial class Form3
+    partial class LogForm
     {
         /// <summary>
         /// Required designer variable.
@@ -42,14 +42,15 @@
             this.logTextBox.Size = new System.Drawing.Size(313, 273);
             this.logTextBox.TabIndex = 0;
             // 
-            // Form3
+            // LogForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(337, 297);
             this.Controls.Add(this.logTextBox);
-            this.Name = "Form3";
+            this.Name = "LogForm";
             this.Text = "Log";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.LogForm_FormClosed);
             this.ResumeLayout(false);
             this.PerformLayout();
 

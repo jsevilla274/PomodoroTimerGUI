@@ -12,7 +12,7 @@ using System.Windows.Forms;
 
 namespace PomodoroTimerForm
 {
-    public partial class Form1 : Form
+    public partial class MainForm : Form
     {
         // Work default values
         public int WorkPeriodMinutes = Properties.Settings.Default.WorkPeriodMinutes;
@@ -52,9 +52,10 @@ namespace PomodoroTimerForm
         bool TimerRunning = false;
         bool HiddenInSystemTray = false;
         SoundPlayer PeriodEndSound, RemindSound;
-        List<string> PeriodLog;
+        public List<string> PeriodLog;
+        public LogForm RunningLogForm = null;
 
-        public Form1()
+        public MainForm()
         {
             InitializeComponent();
             ChangePeriodTo(Period.Work);
@@ -164,16 +165,20 @@ namespace PomodoroTimerForm
                 stateMsg = "period paused";
             }
 
-            // cull the list if exceeding some specified amount of entries
+            // cull the log if exceeding some specified amount of entries
             if (PeriodLog.Count > 100)
             {
                 PeriodLog.RemoveRange(0, 90);
             }
 
             // add the entry to the log
-            PeriodLog.Add(DateTime.Now.ToString("h:mm:ss tt") + " " + PeriodCurrent.ToString() +
-                " " + stateMsg);
-            // TODO: we'll probably want to pass this data to Form3 as well
+            string entry = DateTime.Now.ToString("h:mm:ss tt") + " " + PeriodCurrent.ToString() +
+                " " + stateMsg;
+            PeriodLog.Add(entry);
+            if (RunningLogForm != null)
+            {
+                RunningLogForm.UpdateLog(entry);
+            }
         }
 
         private void StartAndDisplayTimer()
@@ -326,14 +331,13 @@ namespace PomodoroTimerForm
 
         private void settingsButton_Click(object sender, EventArgs e)
         {
-            Form settingsForm = new Form2(this);
-            settingsForm.ShowDialog();
+            new SettingsForm(this).ShowDialog();
         }
 
         private void logButton_Click(object sender, EventArgs e)
         {
-            Form logForm = new Form3(PeriodLog);
-            logForm.Show();
+            RunningLogForm = new LogForm(this);
+            RunningLogForm.Show();
         }
 
         private void nextButton_Click(object sender, EventArgs e)
@@ -381,7 +385,7 @@ namespace PomodoroTimerForm
             {
                 Show();
                 this.WindowState = FormWindowState.Normal;
-                //this.Active()?
+                this.Activate();
                 HiddenInSystemTray = false;
             }
             else
