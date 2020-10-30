@@ -22,12 +22,13 @@ namespace PomodoroTimerForm
         {
             _parentForm = parent;
             InitializeComponent();
-            _workPeriodSaved = new DateTime(2000, 1, 1, 1,
-                Properties.Settings.Default.WorkPeriodMinutes,
-                Properties.Settings.Default.WorkPeriodSeconds);
-            _restPeriodSaved = new DateTime(2000, 1, 1, 1,
-                Properties.Settings.Default.RestPeriodMinutes,
-                Properties.Settings.Default.RestPeriodSeconds);
+
+            uint workSeconds = Properties.Settings.Default.WorkSeconds;
+            uint restSeconds = Properties.Settings.Default.RestSeconds;
+            _workPeriodSaved = new DateTime(2000, 1, 1, 1, (int)(workSeconds / 60), 
+                (int)(workSeconds % 60));
+            _restPeriodSaved = new DateTime(2000, 1, 1, 1, (int)(restSeconds / 60),
+                (int)(restSeconds % 60));
             _globalStartKeyCurrent = Properties.Settings.Default.GlobalStartKey;
             InitializeDefaults();
         }
@@ -84,18 +85,18 @@ namespace PomodoroTimerForm
         {
             if (workPeriodSetting.Value != _workPeriodSaved)
             {
-                Properties.Settings.Default.WorkPeriodMinutes = workPeriodSetting.Value.Minute;
-                _parentForm.WorkPeriodMinutes = workPeriodSetting.Value.Minute;
-                Properties.Settings.Default.WorkPeriodSeconds = workPeriodSetting.Value.Second;
-                _parentForm.WorkPeriodSeconds = workPeriodSetting.Value.Second;
+                uint newSeconds = (uint)(workPeriodSetting.Value.Minute * 60) +
+                    (uint)(workPeriodSetting.Value.Second);
+                Properties.Settings.Default.WorkSeconds = newSeconds;
+                _parentForm.WorkSeconds = newSeconds;
             }
 
             if (restPeriodSetting.Value != _restPeriodSaved)
             {
-                Properties.Settings.Default.RestPeriodMinutes = restPeriodSetting.Value.Minute;
-                _parentForm.RestPeriodMinutes = restPeriodSetting.Value.Minute;
-                Properties.Settings.Default.RestPeriodSeconds = restPeriodSetting.Value.Second;
-                _parentForm.RestPeriodSeconds = restPeriodSetting.Value.Second;
+                uint newSeconds = (uint)(restPeriodSetting.Value.Minute * 60) +
+                    (uint)(restPeriodSetting.Value.Second);
+                Properties.Settings.Default.RestSeconds = newSeconds;
+                _parentForm.RestSeconds = newSeconds;
             }
 
             if (periodEndSoundSetting.Checked != Properties.Settings.Default.PeriodEndSound)
@@ -118,8 +119,8 @@ namespace PomodoroTimerForm
 
             if ((int)remindSecondsSetting.Value != Properties.Settings.Default.RemindSeconds)
             {
-                Properties.Settings.Default.RemindSeconds = (int)remindSecondsSetting.Value;
-                _parentForm.RemindSecondsDefault = (int)remindSecondsSetting.Value;
+                Properties.Settings.Default.RemindSeconds = (uint)remindSecondsSetting.Value;
+                _parentForm.RemindSecondsDefault = (uint)remindSecondsSetting.Value;
             }
 
             if (globalStartSetting.Checked != Properties.Settings.Default.GlobalStart)

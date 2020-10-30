@@ -25,58 +25,34 @@ namespace PomodoroTimerForm.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0")]
-        public int WorkPeriodMinutes {
-            get {
-                return ((int)(this["WorkPeriodMinutes"]));
-            }
-            set {
-                this["WorkPeriodMinutes"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("10")]
-        public int WorkPeriodSeconds {
+        public uint WorkSeconds {
             get {
-                return ((int)(this["WorkPeriodSeconds"]));
+                return ((uint)(this["WorkSeconds"]));
             }
             set {
-                this["WorkPeriodSeconds"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0")]
-        public int RestPeriodMinutes {
-            get {
-                return ((int)(this["RestPeriodMinutes"]));
-            }
-            set {
-                this["RestPeriodMinutes"] = value;
+                this["WorkSeconds"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("5")]
-        public int RestPeriodSeconds {
+        public uint RestSeconds {
             get {
-                return ((int)(this["RestPeriodSeconds"]));
+                return ((uint)(this["RestSeconds"]));
             }
             set {
-                this["RestPeriodSeconds"] = value;
+                this["RestSeconds"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("45")]
-        public int RemindSeconds {
+        public uint RemindSeconds {
             get {
-                return ((int)(this["RemindSeconds"]));
+                return ((uint)(this["RemindSeconds"]));
             }
             set {
                 this["RemindSeconds"] = value;

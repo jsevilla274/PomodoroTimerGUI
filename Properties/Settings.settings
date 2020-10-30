@@ -2,19 +2,13 @@
 <SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="PomodoroTimerForm.Properties" GeneratedClassName="Settings">
   <Profiles />
   <Settings>
-    <Setting Name="WorkPeriodMinutes" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">0</Value>
-    </Setting>
-    <Setting Name="WorkPeriodSeconds" Type="System.Int32" Scope="User">
+    <Setting Name="WorkSeconds" Type="System.UInt32" Scope="User">
       <Value Profile="(Default)">10</Value>
     </Setting>
-    <Setting Name="RestPeriodMinutes" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">0</Value>
-    </Setting>
-    <Setting Name="RestPeriodSeconds" Type="System.Int32" Scope="User">
+    <Setting Name="RestSeconds" Type="System.UInt32" Scope="User">
       <Value Profile="(Default)">5</Value>
     </Setting>
-    <Setting Name="RemindSeconds" Type="System.Int32" Scope="User">
+    <Setting Name="RemindSeconds" Type="System.UInt32" Scope="User">
       <Value Profile="(Default)">45</Value>
     </Setting>
     <Setting Name="PeriodEndSound" Type="System.Boolean" Scope="User">
