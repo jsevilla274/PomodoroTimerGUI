@@ -29,7 +29,6 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.timeDisplay = new System.Windows.Forms.Label();
             this.nextButton = new System.Windows.Forms.Button();
             this.startpauseButton = new System.Windows.Forms.Button();
@@ -37,7 +36,7 @@
             this.settingsButton = new System.Windows.Forms.Button();
             this.periodTimer = new System.Windows.Forms.Timer(this.components);
             this.restartTimeInput = new System.Windows.Forms.DateTimePicker();
-            this.notifyIcon = new System.Windows.Forms.NotifyIcon(this.components);
+            this.mainNotifyIcon = new System.Windows.Forms.NotifyIcon(this.components);
             this.startTimeDisplay = new System.Windows.Forms.Label();
             this.endTimeDisplay = new System.Windows.Forms.Label();
             this.periodLabelDisplay = new System.Windows.Forms.Label();
@@ -106,7 +105,7 @@
             // 
             // restartTimeInput
             // 
-            this.restartTimeInput.CustomFormat = "mm:ss";
+            this.restartTimeInput.CustomFormat = "HH:mm:ss";
             this.restartTimeInput.Font = new System.Drawing.Font("Microsoft Sans Serif", 20F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.restartTimeInput.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
             this.restartTimeInput.Location = new System.Drawing.Point(208, 190);
@@ -116,12 +115,11 @@
             this.restartTimeInput.TabIndex = 4;
             this.restartTimeInput.Value = new System.DateTime(2020, 10, 13, 0, 20, 0, 0);
             // 
-            // notifyIcon
+            // mainNotifyIcon
             // 
-            this.notifyIcon.Icon = ((System.Drawing.Icon)(resources.GetObject("notifyIcon.Icon")));
-            this.notifyIcon.Text = "PomodoroTimer";
-            this.notifyIcon.Visible = true;
-            this.notifyIcon.MouseClick += new System.Windows.Forms.MouseEventHandler(this.notifyIcon_MouseClick);
+            this.mainNotifyIcon.Text = "PomodoroTimer";
+            this.mainNotifyIcon.Visible = true;
+            this.mainNotifyIcon.MouseClick += new System.Windows.Forms.MouseEventHandler(this.notifyIcon_MouseClick);
             // 
             // startTimeDisplay
             // 
@@ -187,7 +185,6 @@
             this.Controls.Add(this.nextButton);
             this.Controls.Add(this.timeDisplay);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
-            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "MainForm";
             this.Text = "PomodoroTimer";
             this.ResumeLayout(false);
@@ -203,7 +200,7 @@
         private System.Windows.Forms.Button settingsButton;
         private System.Windows.Forms.Timer periodTimer;
         private System.Windows.Forms.DateTimePicker restartTimeInput;
-        private System.Windows.Forms.NotifyIcon notifyIcon;
+        private System.Windows.Forms.NotifyIcon mainNotifyIcon;
         private System.Windows.Forms.Label startTimeDisplay;
         private System.Windows.Forms.Label endTimeDisplay;
         private System.Windows.Forms.Label periodLabelDisplay;

@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SettingsForm));
             this.label1 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.periodEndSoundSetting = new System.Windows.Forms.CheckBox();
@@ -45,6 +44,8 @@
             this.workPeriodSetting = new System.Windows.Forms.DateTimePicker();
             this.restPeriodSetting = new System.Windows.Forms.DateTimePicker();
             this.periodEndStopSetting = new System.Windows.Forms.CheckBox();
+            this.label2 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.remindSecondsSetting)).BeginInit();
             this.SuspendLayout();
             // 
@@ -54,9 +55,9 @@
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.Location = new System.Drawing.Point(12, 19);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(143, 17);
+            this.label1.Size = new System.Drawing.Size(85, 17);
             this.label1.TabIndex = 0;
-            this.label1.Text = "Work period (MM:SS)";
+            this.label1.Text = "Work period";
             // 
             // label4
             // 
@@ -64,9 +65,9 @@
             this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label4.Location = new System.Drawing.Point(12, 55);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(139, 17);
+            this.label4.Size = new System.Drawing.Size(81, 17);
             this.label4.TabIndex = 4;
-            this.label4.Text = "Rest period (MM:SS)";
+            this.label4.Text = "Rest period";
             // 
             // periodEndSoundSetting
             // 
@@ -200,7 +201,7 @@
             // 
             // workPeriodSetting
             // 
-            this.workPeriodSetting.CustomFormat = "mmm:ss";
+            this.workPeriodSetting.CustomFormat = "HH:mm:ss ";
             this.workPeriodSetting.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.workPeriodSetting.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
             this.workPeriodSetting.Location = new System.Drawing.Point(170, 17);
@@ -212,7 +213,7 @@
             // 
             // restPeriodSetting
             // 
-            this.restPeriodSetting.CustomFormat = "mmm:ss";
+            this.restPeriodSetting.CustomFormat = "HH:mm:ss";
             this.restPeriodSetting.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.restPeriodSetting.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
             this.restPeriodSetting.Location = new System.Drawing.Point(170, 53);
@@ -234,11 +235,29 @@
             this.periodEndStopSetting.UseVisualStyleBackColor = true;
             this.periodEndStopSetting.CheckedChanged += new System.EventHandler(this.periodEndStopSetting_CheckedChanged);
             // 
+            // label2
+            // 
+            this.label2.Location = new System.Drawing.Point(93, 21);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(70, 19);
+            this.label2.TabIndex = 22;
+            this.label2.Text = "(hh:mm:ss)";
+            // 
+            // label3
+            // 
+            this.label3.Location = new System.Drawing.Point(89, 57);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(70, 19);
+            this.label3.TabIndex = 23;
+            this.label3.Text = "(hh:mm:ss)";
+            // 
             // SettingsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(298, 362);
+            this.Controls.Add(this.label3);
+            this.Controls.Add(this.label2);
             this.Controls.Add(this.periodEndStopSetting);
             this.Controls.Add(this.restPeriodSetting);
             this.Controls.Add(this.workPeriodSetting);
@@ -256,7 +275,6 @@
             this.Controls.Add(this.label4);
             this.Controls.Add(this.label1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
-            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "SettingsForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Settings";
@@ -284,5 +302,7 @@
         private System.Windows.Forms.DateTimePicker workPeriodSetting;
         private System.Windows.Forms.DateTimePicker restPeriodSetting;
         private System.Windows.Forms.CheckBox periodEndStopSetting;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label label3;
     }
 }

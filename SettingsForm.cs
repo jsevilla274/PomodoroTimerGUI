@@ -22,13 +22,11 @@ namespace PomodoroTimerForm
         {
             _parentForm = parent;
             InitializeComponent();
+            this.Icon = Icon.ExtractAssociatedIcon(Application.ExecutablePath);
 
-            uint workSeconds = Properties.Settings.Default.WorkSeconds;
-            uint restSeconds = Properties.Settings.Default.RestSeconds;
-            _workPeriodSaved = new DateTime(2000, 1, 1, 1, (int)(workSeconds / 60), 
-                (int)(workSeconds % 60));
-            _restPeriodSaved = new DateTime(2000, 1, 1, 1, (int)(restSeconds / 60),
-                (int)(restSeconds % 60));
+            _workPeriodSaved = MainForm.SecondsToDateTimePicker(Properties.Settings.Default.WorkSeconds);
+            _restPeriodSaved = MainForm.SecondsToDateTimePicker(Properties.Settings.Default.RestSeconds);
+
             _globalStartKeyCurrent = Properties.Settings.Default.GlobalStartKey;
             InitializeDefaults();
         }
@@ -85,16 +83,14 @@ namespace PomodoroTimerForm
         {
             if (workPeriodSetting.Value != _workPeriodSaved)
             {
-                uint newSeconds = (uint)(workPeriodSetting.Value.Minute * 60) +
-                    (uint)(workPeriodSetting.Value.Second);
+                uint newSeconds = MainForm.DateTimePickerToSeconds(workPeriodSetting.Value);
                 Properties.Settings.Default.WorkSeconds = newSeconds;
                 _parentForm.WorkSeconds = newSeconds;
             }
 
             if (restPeriodSetting.Value != _restPeriodSaved)
             {
-                uint newSeconds = (uint)(restPeriodSetting.Value.Minute * 60) +
-                    (uint)(restPeriodSetting.Value.Second);
+                uint newSeconds = MainForm.DateTimePickerToSeconds(restPeriodSetting.Value);
                 Properties.Settings.Default.RestSeconds = newSeconds;
                 _parentForm.RestSeconds = newSeconds;
             }

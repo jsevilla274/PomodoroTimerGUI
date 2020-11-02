@@ -45,18 +45,21 @@ namespace PomodoroTimerForm
             Restart,
         }
 
-        uint PeriodSeconds, RemindSeconds;
-        // TODO int CumulativeWork
+        uint PeriodSeconds, RemindSeconds, TotalWorkSeconds = 0;
         Period PeriodCurrent;
         bool TimerRunning = false;
         bool HiddenInSystemTray = false;
         SoundPlayer PeriodEndSound, RemindSound;
-        public List<string> PeriodLog;
+        List<string> PeriodLog;
+        string StartDate = null;
         public LogForm RunningLogForm = null;
 
         public MainForm()
         {
             InitializeComponent();
+            Icon appIcon = Icon.ExtractAssociatedIcon(Application.ExecutablePath);
+            this.Icon = appIcon;
+            mainNotifyIcon.Icon = appIcon;
             ChangePeriodTo(Period.Work);
 
             // initialize sound resources
@@ -106,8 +109,7 @@ namespace PomodoroTimerForm
                 // update GUI elements
                 periodLabelDisplay.Text = "- " + WorkLabel + " -";
                 timeDisplay.Text = FormatTime(WorkSeconds);
-                restartTimeInput.Value = new DateTime(2000, 1, 1, 1, (int)(WorkSeconds / 60),
-                    (int)(WorkSeconds % 60));
+                restartTimeInput.Value = SecondsToDateTimePicker(WorkSeconds);
             }
             else if (p == Period.Rest)
             {
@@ -117,8 +119,7 @@ namespace PomodoroTimerForm
                 // update GUI elements
                 periodLabelDisplay.Text = "- " + RestLabel + " -";
                 timeDisplay.Text = FormatTime(RestSeconds);
-                restartTimeInput.Value = new DateTime(2000, 1, 1, 1, (int)(RestSeconds / 60), 
-                    (int)(RestSeconds % 60));
+                restartTimeInput.Value = SecondsToDateTimePicker(RestSeconds);
             }
             else
             {
@@ -128,6 +129,16 @@ namespace PomodoroTimerForm
 
         private void LogPeriod(TimerState state)
         {
+            if (StartDate == null)
+            {
+                StartDate = DateTime.Now.ToString();
+
+                if (RunningLogForm != null)
+                {
+                    RunningLogForm.SetStartDate(StartDate);
+                }
+            }
+
             string stateMsg = "";
             if (state == TimerState.Start)
             {
@@ -224,6 +235,20 @@ namespace PomodoroTimerForm
             }
         }
 
+        public static DateTime SecondsToDateTimePicker(uint seconds)
+        {
+            int hours = (int)seconds / 3600;
+            int mins = (int)seconds % 3600 / 60;
+            int secs = (int)seconds % 60;
+
+            return new DateTime(2000, 1, 1, hours, mins, secs);
+        }
+
+        public static uint DateTimePickerToSeconds(DateTime input)
+        {
+            return (uint)input.Hour * 3600 + (uint)input.Minute * 60 + (uint)input.Second;
+        }
+
         private void startpauseButton_Click(object sender, EventArgs e)
         {
             if (TimerRunning)
@@ -246,8 +271,7 @@ namespace PomodoroTimerForm
         private void restartButton_Click(object sender, EventArgs e)
         {
             periodTimer.Stop();
-            DateTime input = restartTimeInput.Value;
-            PeriodSeconds = ((uint)input.Minute * 60) + (uint)input.Second;
+            PeriodSeconds = DateTimePickerToSeconds(restartTimeInput.Value);
             timeDisplay.Text = FormatTime(PeriodSeconds);
             LogPeriod(TimerState.Restart);
             StartAndDisplayTimer();
@@ -259,6 +283,15 @@ namespace PomodoroTimerForm
             {
                 PeriodSeconds--;
                 timeDisplay.Text = FormatTime(PeriodSeconds);
+
+                if (PeriodCurrent == Period.Work)
+                {
+                    TotalWorkSeconds++;
+                    if (RunningLogForm != null)
+                    {
+                        RunningLogForm.UpdateTotalWorkDisplay(TotalWorkSeconds);
+                    }
+                }
             }
             else
             {
@@ -330,7 +363,7 @@ namespace PomodoroTimerForm
 
         private void logButton_Click(object sender, EventArgs e)
         {
-            RunningLogForm = new LogForm(this);
+            RunningLogForm = new LogForm(this, PeriodLog, TotalWorkSeconds, StartDate);
             RunningLogForm.Show();
         }
 
