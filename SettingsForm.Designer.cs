@@ -46,6 +46,8 @@
             this.periodEndStopSetting = new System.Windows.Forms.CheckBox();
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
+            this.periodEndSoundComboBox = new System.Windows.Forms.ComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.remindSecondsSetting)).BeginInit();
             this.SuspendLayout();
             // 
@@ -85,7 +87,7 @@
             this.remindSetting.CheckAlign = System.Drawing.ContentAlignment.TopLeft;
             this.remindSetting.Enabled = false;
             this.remindSetting.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.remindSetting.Location = new System.Drawing.Point(36, 151);
+            this.remindSetting.Location = new System.Drawing.Point(36, 189);
             this.remindSetting.Name = "remindSetting";
             this.remindSetting.Size = new System.Drawing.Size(242, 38);
             this.remindSetting.TabIndex = 9;
@@ -98,7 +100,7 @@
             this.remindSecondsLabel1.AutoSize = true;
             this.remindSecondsLabel1.Enabled = false;
             this.remindSecondsLabel1.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.remindSecondsLabel1.Location = new System.Drawing.Point(52, 198);
+            this.remindSecondsLabel1.Location = new System.Drawing.Point(52, 236);
             this.remindSecondsLabel1.Name = "remindSecondsLabel1";
             this.remindSecondsLabel1.Size = new System.Drawing.Size(95, 17);
             this.remindSecondsLabel1.TabIndex = 10;
@@ -108,7 +110,7 @@
             // 
             this.remindSecondsSetting.Enabled = false;
             this.remindSecondsSetting.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.remindSecondsSetting.Location = new System.Drawing.Point(150, 196);
+            this.remindSecondsSetting.Location = new System.Drawing.Point(150, 234);
             this.remindSecondsSetting.Minimum = new decimal(new int[] {
             1,
             0,
@@ -128,7 +130,7 @@
             this.remindSecondsLabel2.AutoSize = true;
             this.remindSecondsLabel2.Enabled = false;
             this.remindSecondsLabel2.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.remindSecondsLabel2.Location = new System.Drawing.Point(198, 198);
+            this.remindSecondsLabel2.Location = new System.Drawing.Point(198, 236);
             this.remindSecondsLabel2.Name = "remindSecondsLabel2";
             this.remindSecondsLabel2.Size = new System.Drawing.Size(61, 17);
             this.remindSecondsLabel2.TabIndex = 12;
@@ -138,7 +140,7 @@
             // 
             this.windowFlashSetting.AutoSize = true;
             this.windowFlashSetting.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.windowFlashSetting.Location = new System.Drawing.Point(15, 291);
+            this.windowFlashSetting.Location = new System.Drawing.Point(15, 329);
             this.windowFlashSetting.Name = "windowFlashSetting";
             this.windowFlashSetting.Size = new System.Drawing.Size(250, 21);
             this.windowFlashSetting.TabIndex = 13;
@@ -150,7 +152,7 @@
             this.globalStartSetting.AutoSize = true;
             this.globalStartSetting.Enabled = false;
             this.globalStartSetting.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.globalStartSetting.Location = new System.Drawing.Point(36, 230);
+            this.globalStartSetting.Location = new System.Drawing.Point(36, 268);
             this.globalStartSetting.Name = "globalStartSetting";
             this.globalStartSetting.Size = new System.Drawing.Size(183, 21);
             this.globalStartSetting.TabIndex = 14;
@@ -162,7 +164,7 @@
             // 
             this.globalStartKeyLabel.AutoSize = true;
             this.globalStartKeyLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.globalStartKeyLabel.Location = new System.Drawing.Point(52, 260);
+            this.globalStartKeyLabel.Location = new System.Drawing.Point(52, 298);
             this.globalStartKeyLabel.Name = "globalStartKeyLabel";
             this.globalStartKeyLabel.Size = new System.Drawing.Size(113, 17);
             this.globalStartKeyLabel.TabIndex = 15;
@@ -171,7 +173,7 @@
             // globalStartKeySetting
             // 
             this.globalStartKeySetting.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.globalStartKeySetting.Location = new System.Drawing.Point(179, 257);
+            this.globalStartKeySetting.Location = new System.Drawing.Point(179, 295);
             this.globalStartKeySetting.Name = "globalStartKeySetting";
             this.globalStartKeySetting.ReadOnly = true;
             this.globalStartKeySetting.Size = new System.Drawing.Size(100, 23);
@@ -181,7 +183,7 @@
             // 
             // saveSetting
             // 
-            this.saveSetting.Location = new System.Drawing.Point(25, 329);
+            this.saveSetting.Location = new System.Drawing.Point(25, 367);
             this.saveSetting.Name = "saveSetting";
             this.saveSetting.Size = new System.Drawing.Size(116, 23);
             this.saveSetting.TabIndex = 17;
@@ -191,7 +193,7 @@
             // 
             // cancelSetting
             // 
-            this.cancelSetting.Location = new System.Drawing.Point(159, 329);
+            this.cancelSetting.Location = new System.Drawing.Point(159, 367);
             this.cancelSetting.Name = "cancelSetting";
             this.cancelSetting.Size = new System.Drawing.Size(116, 23);
             this.cancelSetting.TabIndex = 18;
@@ -227,7 +229,7 @@
             // 
             this.periodEndStopSetting.AutoSize = true;
             this.periodEndStopSetting.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.periodEndStopSetting.Location = new System.Drawing.Point(15, 120);
+            this.periodEndStopSetting.Location = new System.Drawing.Point(15, 158);
             this.periodEndStopSetting.Name = "periodEndStopSetting";
             this.periodEndStopSetting.Size = new System.Drawing.Size(183, 21);
             this.periodEndStopSetting.TabIndex = 21;
@@ -251,11 +253,34 @@
             this.label3.TabIndex = 23;
             this.label3.Text = "(hh:mm:ss)";
             // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label5.Location = new System.Drawing.Point(33, 120);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(102, 17);
+            this.label5.TabIndex = 24;
+            this.label5.Text = "End sound file:";
+            // 
+            // periodEndSoundComboBox
+            // 
+            this.periodEndSoundComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.periodEndSoundComboBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.periodEndSoundComboBox.FormattingEnabled = true;
+            this.periodEndSoundComboBox.Location = new System.Drawing.Point(137, 116);
+            this.periodEndSoundComboBox.Name = "periodEndSoundComboBox";
+            this.periodEndSoundComboBox.Size = new System.Drawing.Size(140, 24);
+            this.periodEndSoundComboBox.TabIndex = 25;
+            this.periodEndSoundComboBox.SelectedIndexChanged += new System.EventHandler(this.periodEndSoundComboBox_SelectedIndexChanged);
+            // 
             // SettingsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(298, 362);
+            this.ClientSize = new System.Drawing.Size(298, 415);
+            this.Controls.Add(this.periodEndSoundComboBox);
+            this.Controls.Add(this.label5);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.periodEndStopSetting);
@@ -304,5 +329,7 @@
         private System.Windows.Forms.CheckBox periodEndStopSetting;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.ComboBox periodEndSoundComboBox;
     }
 }

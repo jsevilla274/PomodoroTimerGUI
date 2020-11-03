@@ -29,5 +29,8 @@
     <Setting Name="GlobalStartKey" Type="System.Windows.Forms.Keys" Scope="User">
       <Value Profile="(Default)">Ins</Value>
     </Setting>
+    <Setting Name="PeriodEndSoundPath" Type="System.String" Scope="User">
+      <Value Profile="(Default)">lingeringbells.wav</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

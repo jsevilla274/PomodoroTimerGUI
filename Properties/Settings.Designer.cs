@@ -130,5 +130,17 @@ namespace PomodoroTimerForm.Properties {
                 this["GlobalStartKey"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("lingeringbells.wav")]
+        public string PeriodEndSoundPath {
+            get {
+                return ((string)(this["PeriodEndSoundPath"]));
+            }
+            set {
+                this["PeriodEndSoundPath"] = value;
+            }
+        }
     }
 }
