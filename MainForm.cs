@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Diagnostics;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Media;
 using System.Text;
@@ -23,7 +24,7 @@ namespace PomodoroTimerForm
         const string RestLabel = "Rest";
 
         // Other defaults
-        public uint RemindSecondsDefault = Properties.Settings.Default.RemindSeconds;
+        public uint RemindSecondsSaved = Properties.Settings.Default.RemindSeconds;
         public bool RemindEnabled = Properties.Settings.Default.Remind;
         public bool PeriodEndSoundEnabled = Properties.Settings.Default.PeriodEndSound;
         public bool PeriodEndStopEnabled = Properties.Settings.Default.PeriodEndStop;
@@ -61,13 +62,7 @@ namespace PomodoroTimerForm
             this.Icon = appIcon;
             mainNotifyIcon.Icon = appIcon;
             ChangePeriodTo(Period.Work);
-
-            // initialize sound resources
-            PeriodEndSound = new SoundPlayer();
-            PeriodEndSound.Stream = Properties.Resources.LingeringBells;
-            RemindSound = new SoundPlayer();
-            RemindSound.Stream = Properties.Resources.Ding;
-
+            InitializeSoundPlayers();
             PeriodLog = new List<string>();
         }
 
@@ -177,7 +172,7 @@ namespace PomodoroTimerForm
                 stateMsg = "period paused";
             }
 
-            // cull the log if exceeding some specified amount of entries
+            // cull the log if exceeding some specified amount of entries (100)
             if (PeriodLog.Count > 100)
             {
                 PeriodLog.RemoveRange(0, 90);
@@ -247,6 +242,53 @@ namespace PomodoroTimerForm
         public static uint DateTimePickerToSeconds(DateTime input)
         {
             return (uint)input.Hour * 3600 + (uint)input.Minute * 60 + (uint)input.Second;
+        }
+
+        private void InitializeSoundPlayers()
+        {
+            string savedPESPath = Properties.Settings.Default.PeriodEndSoundPath;
+            if (savedPESPath == SettingsForm.PeriodEndSoundDefault)
+            {
+                PeriodEndSound = new SoundPlayer(Properties.Resources.LingeringBells);
+            }
+            else
+            {
+                if (File.Exists(savedPESPath))
+                {
+                    PeriodEndSound = new SoundPlayer(savedPESPath);
+                    Debug.WriteLine("Custom period end sound file loaded!: " + savedPESPath);
+                }
+                else
+                {
+                    // reset the bad/nonexistant path to the default
+                    Properties.Settings.Default.PeriodEndSoundPath = SettingsForm.PeriodEndSoundDefault;
+                    Properties.Settings.Default.Save();
+                    PeriodEndSound = new SoundPlayer(Properties.Resources.LingeringBells);
+                    Debug.WriteLine("Bad/nonexistant path, resetting period end sound to default");
+                }
+            }
+            
+            RemindSound = new SoundPlayer(Properties.Resources.Notify);
+        }
+
+        /// <summary>
+        /// Changes the sound used for period end
+        /// </summary>
+        /// <param name="path">The path to the new sound's wav file. If left empty, will set to
+        /// the default period end sound</param>
+        public void SetPeriodEndSound(string path = null)
+        {
+            if (path != null && File.Exists(path))
+            {
+                PeriodEndSound.SoundLocation = path;
+                PeriodEndSound.Load();
+                Debug.WriteLine("Period end sound set to custom sound file");
+            }
+            else
+            {
+                PeriodEndSound.Stream = Properties.Resources.LingeringBells;
+                Debug.WriteLine("Period end sound set to default sound file");
+            }
         }
 
         private void startpauseButton_Click(object sender, EventArgs e)
@@ -350,7 +392,7 @@ namespace PomodoroTimerForm
                 if (RemindEnabled)  
                 {
                     // activate remind sound timer
-                    RemindSeconds = RemindSecondsDefault;
+                    RemindSeconds = RemindSecondsSaved;
                     remindSoundTimer.Start();
                 }
             }
@@ -402,7 +444,7 @@ namespace PomodoroTimerForm
             else
             {
                 RemindSound.Play();
-                RemindSeconds = RemindSecondsDefault;
+                RemindSeconds = RemindSecondsSaved;
             }
         }
 

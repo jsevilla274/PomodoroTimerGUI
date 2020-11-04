@@ -14,46 +14,57 @@ namespace PomodoroTimerForm
 {
     public partial class SettingsForm : Form
     {
+        public static readonly string PeriodEndSoundDefault = "lingeringbells.wav";
         private DateTime _workPeriodSaved, _restPeriodSaved;
         private MainForm _parentForm;
         private bool _globalStartEditing = false;
         private string _periodEndSoundPathCurrent;
-        private const string _periodEndSoundDefault = "lingeringbells.wav";
         private Keys _globalStartKeyCurrent;
+
 
         public SettingsForm(MainForm parent)
         {
             InitializeComponent();
             this.Icon = Icon.ExtractAssociatedIcon(Application.ExecutablePath);
             _parentForm = parent;
-            InitializeDefaults();
+            InitializeFormDefaults();
 
-            // init periodend combobox
-            periodEndSoundComboBox.Items.Add(_periodEndSoundDefault);
+            // initialize periodend combobox
+            periodEndSoundComboBox.Items.Add(PeriodEndSoundDefault);
             _periodEndSoundPathCurrent = Properties.Settings.Default.PeriodEndSoundPath;
-            if (_periodEndSoundPathCurrent != _periodEndSoundDefault)
-            { 
-                if (File.Exists(_periodEndSoundPathCurrent))
-                {
-                    // add custom sound item and select it 
-                    periodEndSoundComboBox.Items.Add(Path.GetFileName(_periodEndSoundPathCurrent));
-                    periodEndSoundComboBox.SelectedIndex = 1;
-                }
-                else
-                {
-                    // select default sound item & remove invalid path from settings
-                    periodEndSoundComboBox.SelectedIndex = 0;
-                    Properties.Settings.Default.PeriodEndSoundPath = _periodEndSoundDefault;
-                    Properties.Settings.Default.Save();
-                }
+            if (_periodEndSoundPathCurrent != PeriodEndSoundDefault)
+            {
+                periodEndSoundComboBox.Items.Add(Path.GetFileName(_periodEndSoundPathCurrent));
+                periodEndSoundComboBox.SelectedIndex = 1;
             }
             else
             {
                 // select default sound item
                 periodEndSoundComboBox.SelectedIndex = 0;
             }
+            // add open file item and add event handler for it
             periodEndSoundComboBox.Items.Add("Select a different file...");
-            
+            periodEndSoundComboBox.SelectedIndexChanged += 
+                new EventHandler(periodEndSoundComboBox_SelectedIndexChanged);
+
+
+            // initialize remind combobox
+            //periodEndSoundComboBox.Items.Add(PeriodEndSoundDefault);
+            //_periodEndSoundPathCurrent = Properties.Settings.Default.PeriodEndSoundPath;
+            //if (_periodEndSoundPathCurrent != PeriodEndSoundDefault)
+            //{
+            //    periodEndSoundComboBox.Items.Add(Path.GetFileName(_periodEndSoundPathCurrent));
+            //    periodEndSoundComboBox.SelectedIndex = 1;
+            //}
+            //else
+            //{
+            //    // select default sound item
+            //    periodEndSoundComboBox.SelectedIndex = 0;
+            //}
+            //// add open file item and add event handler for it
+            //periodEndSoundComboBox.Items.Add("Select a different file...");
+            //periodEndSoundComboBox.SelectedIndexChanged +=
+            //    new EventHandler(periodEndSoundComboBox_SelectedIndexChanged);
         }
 
         /// <summary>
@@ -61,7 +72,7 @@ namespace PomodoroTimerForm
         /// is for all text input fields to be empty, checkboxes unchecked, and subfields to be
         /// disabled
         /// </summary>
-        private void InitializeDefaults()
+        private void InitializeFormDefaults()
         {
             // set private variables to default
             _workPeriodSaved = MainForm.SecondsToDateTimePicker(Properties.Settings.Default.WorkSeconds);
@@ -147,7 +158,7 @@ namespace PomodoroTimerForm
             if ((int)remindSecondsSetting.Value != Properties.Settings.Default.RemindSeconds)
             {
                 Properties.Settings.Default.RemindSeconds = (uint)remindSecondsSetting.Value;
-                _parentForm.RemindSecondsDefault = (uint)remindSecondsSetting.Value;
+                _parentForm.RemindSecondsSaved = (uint)remindSecondsSetting.Value;
             }
 
             if (globalStartSetting.Checked != Properties.Settings.Default.GlobalStart)
@@ -169,17 +180,16 @@ namespace PomodoroTimerForm
                 
             }
 
-            if (periodEndSoundComboBox.SelectedIndex == 0 &&
-                Properties.Settings.Default.PeriodEndSoundPath != _periodEndSoundDefault)
+            string savedPESPath = Properties.Settings.Default.PeriodEndSoundPath;
+            if (periodEndSoundComboBox.SelectedIndex == 0 && savedPESPath != PeriodEndSoundDefault)
             {
-                Properties.Settings.Default.PeriodEndSoundPath = _periodEndSoundDefault;
-                //MainForm.ChangePeriodEndSound();
+                Properties.Settings.Default.PeriodEndSoundPath = PeriodEndSoundDefault;
+                _parentForm.SetPeriodEndSound();
             }
-            else if (periodEndSoundComboBox.SelectedIndex == 1 &&
-                Properties.Settings.Default.PeriodEndSoundPath != _periodEndSoundPathCurrent)
-            { 
+            else if (periodEndSoundComboBox.SelectedIndex == 1 && savedPESPath != _periodEndSoundPathCurrent)
+            {
                 Properties.Settings.Default.PeriodEndSoundPath = _periodEndSoundPathCurrent;
-                //MainForm.ChangePeriodEndSound(_periodEndSoundPathNew);
+                _parentForm.SetPeriodEndSound(_periodEndSoundPathCurrent);
             }
 
             // close form and save settings to file
@@ -213,6 +223,7 @@ namespace PomodoroTimerForm
                 if (ofdialog.ShowDialog() == DialogResult.OK)
                 {
                     _periodEndSoundPathCurrent = ofdialog.FileName;
+                    Debug.WriteLine("Newly Selected PESPath: " + _periodEndSoundPathCurrent);
 
                     // second (1th) item will always be where the "custom" sound is placed
                     if (periodEndSoundComboBox.Items.Count > 2)

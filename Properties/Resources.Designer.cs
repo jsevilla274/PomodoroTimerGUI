@@ -63,18 +63,18 @@ namespace PomodoroTimerForm.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.IO.UnmanagedMemoryStream similar to System.IO.MemoryStream.
         /// </summary>
-        internal static System.IO.UnmanagedMemoryStream Ding {
+        internal static System.IO.UnmanagedMemoryStream LingeringBells {
             get {
-                return ResourceManager.GetStream("Ding", resourceCulture);
+                return ResourceManager.GetStream("LingeringBells", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized resource of type System.IO.UnmanagedMemoryStream similar to System.IO.MemoryStream.
         /// </summary>
-        internal static System.IO.UnmanagedMemoryStream LingeringBells {
+        internal static System.IO.UnmanagedMemoryStream Notify {
             get {
-                return ResourceManager.GetStream("LingeringBells", resourceCulture);
+                return ResourceManager.GetStream("Notify", resourceCulture);
             }
         }
     }

@@ -272,7 +272,6 @@
             this.periodEndSoundComboBox.Name = "periodEndSoundComboBox";
             this.periodEndSoundComboBox.Size = new System.Drawing.Size(140, 24);
             this.periodEndSoundComboBox.TabIndex = 25;
-            this.periodEndSoundComboBox.SelectedIndexChanged += new System.EventHandler(this.periodEndSoundComboBox_SelectedIndexChanged);
             // 
             // SettingsForm
             // 
