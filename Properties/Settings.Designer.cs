@@ -142,5 +142,17 @@ namespace PomodoroTimerForm.Properties {
                 this["PeriodEndSoundPath"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("notify.wav")]
+        public string RemindSoundPath {
+            get {
+                return ((string)(this["RemindSoundPath"]));
+            }
+            set {
+                this["RemindSoundPath"] = value;
+            }
+        }
     }
 }

@@ -256,7 +256,6 @@ namespace PomodoroTimerForm
                 if (File.Exists(savedPESPath))
                 {
                     PeriodEndSound = new SoundPlayer(savedPESPath);
-                    Debug.WriteLine("Custom period end sound file loaded!: " + savedPESPath);
                 }
                 else
                 {
@@ -264,11 +263,30 @@ namespace PomodoroTimerForm
                     Properties.Settings.Default.PeriodEndSoundPath = SettingsForm.PeriodEndSoundDefault;
                     Properties.Settings.Default.Save();
                     PeriodEndSound = new SoundPlayer(Properties.Resources.LingeringBells);
-                    Debug.WriteLine("Bad/nonexistant path, resetting period end sound to default");
+                    Debug.WriteLine("ERROR: Bad/nonexistant path, resetting period end sound to default");
                 }
             }
-            
-            RemindSound = new SoundPlayer(Properties.Resources.Notify);
+
+            string savedRSPath = Properties.Settings.Default.RemindSoundPath;
+            if (savedRSPath == SettingsForm.RemindSoundDefault)
+            {
+                RemindSound = new SoundPlayer(Properties.Resources.Notify);
+            }
+            else
+            {
+                if (File.Exists(savedRSPath))
+                {
+                    RemindSound = new SoundPlayer(savedRSPath);
+                }
+                else
+                {
+                    // reset the bad/nonexistant path to the default
+                    Properties.Settings.Default.RemindSoundPath = SettingsForm.RemindSoundDefault;
+                    Properties.Settings.Default.Save();
+                    RemindSound = new SoundPlayer(Properties.Resources.Notify);
+                    Debug.WriteLine("ERROR: Bad/nonexistant path, resetting remind sound to default");
+                }
+            }
         }
 
         /// <summary>
@@ -282,12 +300,28 @@ namespace PomodoroTimerForm
             {
                 PeriodEndSound.SoundLocation = path;
                 PeriodEndSound.Load();
-                Debug.WriteLine("Period end sound set to custom sound file");
             }
             else
             {
                 PeriodEndSound.Stream = Properties.Resources.LingeringBells;
-                Debug.WriteLine("Period end sound set to default sound file");
+            }
+        }
+
+        /// <summary>
+        /// Changes the sound used for remind
+        /// </summary>
+        /// <param name="path">The path to the new sound's wav file. If left empty, will set to
+        /// the default remind sound</param>
+        public void SetRemindSound(string path = null)
+        {
+            if (path != null && File.Exists(path))
+            {
+                RemindSound.SoundLocation = path;
+                RemindSound.Load();
+            }
+            else
+            {
+                RemindSound.Stream = Properties.Resources.Notify;
             }
         }
 

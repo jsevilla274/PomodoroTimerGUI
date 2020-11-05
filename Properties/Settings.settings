@@ -32,5 +32,8 @@
     <Setting Name="PeriodEndSoundPath" Type="System.String" Scope="User">
       <Value Profile="(Default)">lingeringbells.wav</Value>
     </Setting>
+    <Setting Name="RemindSoundPath" Type="System.String" Scope="User">
+      <Value Profile="(Default)">notify.wav</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
