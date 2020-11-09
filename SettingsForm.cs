@@ -49,17 +49,24 @@ namespace PomodoroTimerForm
 
             periodEndSoundSetting.Checked = Properties.Settings.Default.PeriodEndSound;
             InitializeSoundComboBox(periodEndSoundComboBox);
-            periodEndSoundSetting_CheckedChanged(null, null); // enable PESound & suboptions in GUI
+            periodEndSoundSetting_CheckedChanged(null, null); // enable PESound suboptions
 
             periodEndStopSetting.Checked = Properties.Settings.Default.PeriodEndStop;
             remindSetting.Checked = Properties.Settings.Default.Remind;
             remindSecondsSetting.Value = Properties.Settings.Default.RemindSeconds;
             InitializeSoundComboBox(remindSoundComboBox);
             globalStartSetting.Checked = Properties.Settings.Default.GlobalStart;
+            globalStartSettingToolTip.SetToolTip(globalStartSetting, "Allows you to start the " +
+                "timer on period end by\npressing a specified key from any application");
             globalStartKeySetting.Text = _globalStartKeyCurrent.ToString();
-            periodEndStopSetting_CheckedChanged(null, null);    // enable PES & suboptions in GUI
+            periodEndStopSetting_CheckedChanged(null, null);    // enable PES suboptions
            
             windowFlashSetting.Checked = Properties.Settings.Default.WindowFlash;
+            notifyIconSetting.Checked = Properties.Settings.Default.NotifyIcon;
+            notifyIconSettingToolTip.SetToolTip(notifyIconSetting, "Clicking on the system tray " +
+                "icon allows you to hide/unhide\nthe timer, making it disappear/reappear on the taskbar");
+            notifyIconMinimizeSetting.Checked = Properties.Settings.Default.NotifyIconMinimize;
+            notifyIconSetting_CheckedChanged(null, null);   // enable notifyIconSetting suboptions
         }
 
         private void InitializeSoundComboBox(ComboBox cbox)
@@ -185,6 +192,9 @@ namespace PomodoroTimerForm
                 _parentForm.WindowFlashEnabled = windowFlashSetting.Checked;     
             }
 
+            // TODO: use public soundplayer properties to set soundplayers instead of cluttering
+            // mainform with this logic
+
             string savedPESPath = Properties.Settings.Default.PeriodEndSoundPath;
             if (periodEndSoundComboBox.SelectedIndex == 0 && savedPESPath != PeriodEndSoundDefault)
             {
@@ -207,6 +217,17 @@ namespace PomodoroTimerForm
             {
                 Properties.Settings.Default.RemindSoundPath = _remindSoundPathCurrent;
                 _parentForm.SetRemindSound(_remindSoundPathCurrent);
+            }
+
+            if (notifyIconSetting.Checked != Properties.Settings.Default.NotifyIcon)
+            {
+                Properties.Settings.Default.NotifyIcon = notifyIconSetting.Checked;
+                _parentForm.SetNotifyIconVisibility(notifyIconSetting.Checked);
+            }
+
+            if (notifyIconMinimizeSetting.Checked != Properties.Settings.Default.NotifyIconMinimize)
+            {
+                Properties.Settings.Default.NotifyIconMinimize = notifyIconMinimizeSetting.Checked;
             }
 
             // close form and save settings to file
@@ -267,6 +288,11 @@ namespace PomodoroTimerForm
             bool enable = periodEndSoundSetting.Checked;
             periodEndSoundLabel.Enabled = enable;
             periodEndSoundComboBox.Enabled = enable;
+        }
+
+        private void notifyIconSetting_CheckedChanged(object sender, EventArgs e)
+        {
+            notifyIconMinimizeSetting.Enabled = notifyIconSetting.Checked;
         }
 
         private void cancelSetting_Click(object sender, EventArgs e)

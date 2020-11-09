@@ -58,12 +58,18 @@ namespace PomodoroTimerForm
         public MainForm()
         {
             InitializeComponent();
+
+            // set icon defaults for form and notifyicon
             Icon appIcon = Icon.ExtractAssociatedIcon(Application.ExecutablePath);
             this.Icon = appIcon;
             mainNotifyIcon.Icon = appIcon;
+            mainNotifyIcon.Visible = Properties.Settings.Default.NotifyIcon;
+
             ChangePeriodTo(Period.Work);
             InitializeSoundPlayers();
             PeriodLog = new List<string>();
+
+            //TODO: startpausebuttonclick
         }
 
         private void DisplayStartEndTimes()
@@ -325,6 +331,18 @@ namespace PomodoroTimerForm
             }
         }
 
+        public void SetNotifyIconVisibility(bool visible)
+        {
+            mainNotifyIcon.Visible = visible;
+            if (HiddenInSystemTray && !visible)
+            {
+                // show form to avoid both it and the notifyicon to be hidden
+                Show();
+                this.WindowState = FormWindowState.Normal;
+                HiddenInSystemTray = false;
+            }
+        }
+
         private void startpauseButton_Click(object sender, EventArgs e)
         {
             if (TimerRunning)
@@ -441,6 +459,18 @@ namespace PomodoroTimerForm
         {
             RunningLogForm = new LogForm(this, PeriodLog, TotalWorkSeconds, StartDate);
             RunningLogForm.Show();
+        }
+
+        private void MainForm_Resize(object sender, EventArgs e)
+        {
+            // note: we check if the notify icon is visible to ensure the user is not stuck
+            // in a state where they can hide the form and not have a way to restore it
+            if (Properties.Settings.Default.NotifyIconMinimize && mainNotifyIcon.Visible
+                && this.WindowState == FormWindowState.Minimized)
+            {
+                Hide();
+                HiddenInSystemTray = true;
+            }
         }
 
         private void nextButton_Click(object sender, EventArgs e)

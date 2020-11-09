@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.label1 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.periodEndSoundSetting = new System.Windows.Forms.CheckBox();
@@ -50,6 +51,10 @@
             this.periodEndSoundComboBox = new System.Windows.Forms.ComboBox();
             this.remindSoundComboBox = new System.Windows.Forms.ComboBox();
             this.remindSoundLabel = new System.Windows.Forms.Label();
+            this.notifyIconSetting = new System.Windows.Forms.CheckBox();
+            this.notifyIconMinimizeSetting = new System.Windows.Forms.CheckBox();
+            this.notifyIconSettingToolTip = new System.Windows.Forms.ToolTip(this.components);
+            this.globalStartSettingToolTip = new System.Windows.Forms.ToolTip(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.remindSecondsSetting)).BeginInit();
             this.SuspendLayout();
             // 
@@ -176,7 +181,7 @@
             // globalStartKeySetting
             // 
             this.globalStartKeySetting.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.globalStartKeySetting.Location = new System.Drawing.Point(179, 335);
+            this.globalStartKeySetting.Location = new System.Drawing.Point(173, 335);
             this.globalStartKeySetting.Name = "globalStartKeySetting";
             this.globalStartKeySetting.ReadOnly = true;
             this.globalStartKeySetting.Size = new System.Drawing.Size(100, 23);
@@ -186,7 +191,7 @@
             // 
             // saveSetting
             // 
-            this.saveSetting.Location = new System.Drawing.Point(25, 407);
+            this.saveSetting.Location = new System.Drawing.Point(25, 467);
             this.saveSetting.Name = "saveSetting";
             this.saveSetting.Size = new System.Drawing.Size(116, 23);
             this.saveSetting.TabIndex = 17;
@@ -196,7 +201,7 @@
             // 
             // cancelSetting
             // 
-            this.cancelSetting.Location = new System.Drawing.Point(159, 407);
+            this.cancelSetting.Location = new System.Drawing.Point(159, 467);
             this.cancelSetting.Name = "cancelSetting";
             this.cancelSetting.Size = new System.Drawing.Size(116, 23);
             this.cancelSetting.TabIndex = 18;
@@ -300,11 +305,48 @@
             this.remindSoundLabel.TabIndex = 26;
             this.remindSoundLabel.Text = "Sound file:";
             // 
+            // notifyIconSetting
+            // 
+            this.notifyIconSetting.AutoSize = true;
+            this.notifyIconSetting.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.notifyIconSetting.Location = new System.Drawing.Point(15, 400);
+            this.notifyIconSetting.Name = "notifyIconSetting";
+            this.notifyIconSetting.Size = new System.Drawing.Size(177, 21);
+            this.notifyIconSetting.TabIndex = 28;
+            this.notifyIconSetting.Text = "Enable system tray icon";
+            this.notifyIconSetting.UseVisualStyleBackColor = true;
+            this.notifyIconSetting.CheckedChanged += new System.EventHandler(this.notifyIconSetting_CheckedChanged);
+            // 
+            // notifyIconMinimizeSetting
+            // 
+            this.notifyIconMinimizeSetting.AutoSize = true;
+            this.notifyIconMinimizeSetting.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.notifyIconMinimizeSetting.Location = new System.Drawing.Point(36, 430);
+            this.notifyIconMinimizeSetting.Name = "notifyIconMinimizeSetting";
+            this.notifyIconMinimizeSetting.Size = new System.Drawing.Size(212, 21);
+            this.notifyIconMinimizeSetting.TabIndex = 29;
+            this.notifyIconMinimizeSetting.Text = "Hide timer in tray on minimize";
+            this.notifyIconMinimizeSetting.UseVisualStyleBackColor = true;
+            // 
+            // notifyIconSettingToolTip
+            // 
+            this.notifyIconSettingToolTip.AutoPopDelay = 32000;
+            this.notifyIconSettingToolTip.InitialDelay = 500;
+            this.notifyIconSettingToolTip.ReshowDelay = 100;
+            // 
+            // globalStartSettingToolTip
+            // 
+            this.globalStartSettingToolTip.AutoPopDelay = 32000;
+            this.globalStartSettingToolTip.InitialDelay = 500;
+            this.globalStartSettingToolTip.ReshowDelay = 100;
+            // 
             // SettingsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(298, 440);
+            this.ClientSize = new System.Drawing.Size(298, 498);
+            this.Controls.Add(this.notifyIconMinimizeSetting);
+            this.Controls.Add(this.notifyIconSetting);
             this.Controls.Add(this.remindSoundComboBox);
             this.Controls.Add(this.remindSoundLabel);
             this.Controls.Add(this.periodEndSoundComboBox);
@@ -361,5 +403,9 @@
         private System.Windows.Forms.ComboBox periodEndSoundComboBox;
         private System.Windows.Forms.ComboBox remindSoundComboBox;
         private System.Windows.Forms.Label remindSoundLabel;
+        private System.Windows.Forms.CheckBox notifyIconSetting;
+        private System.Windows.Forms.CheckBox notifyIconMinimizeSetting;
+        private System.Windows.Forms.ToolTip notifyIconSettingToolTip;
+        private System.Windows.Forms.ToolTip globalStartSettingToolTip;
     }
 }

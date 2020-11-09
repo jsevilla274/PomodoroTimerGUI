@@ -35,5 +35,11 @@
     <Setting Name="RemindSoundPath" Type="System.String" Scope="User">
       <Value Profile="(Default)">notify.wav</Value>
     </Setting>
+    <Setting Name="NotifyIcon" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="NotifyIconMinimize" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

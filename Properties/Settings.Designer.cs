@@ -154,5 +154,29 @@ namespace PomodoroTimerForm.Properties {
                 this["RemindSoundPath"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool NotifyIcon {
+            get {
+                return ((bool)(this["NotifyIcon"]));
+            }
+            set {
+                this["NotifyIcon"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool NotifyIconMinimize {
+            get {
+                return ((bool)(this["NotifyIconMinimize"]));
+            }
+            set {
+                this["NotifyIconMinimize"] = value;
+            }
+        }
     }
 }

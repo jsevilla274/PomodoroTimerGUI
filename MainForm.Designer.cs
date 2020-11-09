@@ -187,6 +187,7 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Name = "MainForm";
             this.Text = "PomodoroTimer";
+            this.Resize += new System.EventHandler(this.MainForm_Resize);
             this.ResumeLayout(false);
 
         }
@@ -200,12 +201,12 @@
         private System.Windows.Forms.Button settingsButton;
         private System.Windows.Forms.Timer periodTimer;
         private System.Windows.Forms.DateTimePicker restartTimeInput;
-        private System.Windows.Forms.NotifyIcon mainNotifyIcon;
         private System.Windows.Forms.Label startTimeDisplay;
         private System.Windows.Forms.Label endTimeDisplay;
         private System.Windows.Forms.Label periodLabelDisplay;
         private System.Windows.Forms.Timer remindSoundTimer;
         private System.Windows.Forms.Button logButton;
+        private System.Windows.Forms.NotifyIcon mainNotifyIcon;
     }
 }
 
