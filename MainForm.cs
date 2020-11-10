@@ -15,30 +15,18 @@ namespace PomodoroTimerForm
 {
     public partial class MainForm : Form
     {
-        // Work default values
-        public uint WorkSeconds = Properties.Settings.Default.WorkSeconds;
-        const string WorkLabel = "Work";
+        // Defaults
+        public readonly string PeriodEndSoundName = "lingeringbells.wav";
+        public readonly string RemindSoundName = "notify.wav";
+        private const int _maxLogEntries = 100;
 
-        // Rest default values
-        public uint RestSeconds = Properties.Settings.Default.RestSeconds;
-        const string RestLabel = "Rest";
-
-        // Other defaults
-        public uint RemindSecondsSaved = Properties.Settings.Default.RemindSeconds;
-        public bool RemindEnabled = Properties.Settings.Default.Remind;
-        public bool PeriodEndSoundEnabled = Properties.Settings.Default.PeriodEndSound;
-        public bool PeriodEndStopEnabled = Properties.Settings.Default.PeriodEndStop;
-        public bool GlobalStartEnabled = Properties.Settings.Default.GlobalStart;
-        public Keys GlobalStartKey = Properties.Settings.Default.GlobalStartKey;
-        public bool WindowFlashEnabled = Properties.Settings.Default.WindowFlash;
-
-        enum Period
+        private enum Period
         {
             Work,
             Rest,
         }
 
-        enum TimerState
+        private enum TimerState
         {
             Start,
             End,
@@ -46,14 +34,15 @@ namespace PomodoroTimerForm
             Restart,
         }
 
-        uint PeriodSeconds, RemindSeconds, TotalWorkSeconds = 0;
-        Period PeriodCurrent;
-        bool TimerRunning = false;
-        bool HiddenInSystemTray = false;
-        SoundPlayer PeriodEndSound, RemindSound;
-        List<string> PeriodLog;
-        string StartDate = null;
+        // Runtime
+        public SoundPlayer PeriodEndSound, RemindSound;
         public LogForm RunningLogForm = null;
+        public List<string> PeriodLog;
+        public string StartDate = null;
+        private uint _periodSeconds, _remindSeconds, _totalWorkSeconds = 0;
+        private Period _periodCurrent;
+        private bool _timerRunning = false;
+        private bool _hiddenInSystemTray = false;
 
         public MainForm()
         {
@@ -69,13 +58,14 @@ namespace PomodoroTimerForm
             InitializeSoundPlayers();
             PeriodLog = new List<string>();
 
-            //TODO: startpausebuttonclick
+            // start timer immediately
+            startpauseButton_Click(null, null);
         }
 
         private void DisplayStartEndTimes()
         {
             DateTime startTime = DateTime.Now;
-            DateTime endTime = startTime.AddSeconds(PeriodSeconds);
+            DateTime endTime = startTime.AddSeconds(_periodSeconds);
             startTimeDisplay.Text = "Start: " + startTime.ToString("h:mm tt");
             endTimeDisplay.Text = "End: " + endTime.ToString("h:mm tt");
             startTimeDisplay.Visible = true;
@@ -104,23 +94,23 @@ namespace PomodoroTimerForm
         {
             if (p == Period.Work)
             {
-                PeriodCurrent = p;
-                PeriodSeconds = WorkSeconds;
+                _periodCurrent = p;
+                _periodSeconds = Properties.Settings.Default.WorkSeconds;
 
                 // update GUI elements
-                periodLabelDisplay.Text = "- " + WorkLabel + " -";
-                timeDisplay.Text = FormatTime(WorkSeconds);
-                restartTimeInput.Value = SecondsToDateTimePicker(WorkSeconds);
+                periodLabelDisplay.Text = "- " + Period.Work.ToString() + " -";
+                timeDisplay.Text = FormatTime(Properties.Settings.Default.WorkSeconds);
+                restartTimeInput.Value = SecondsToDateTimePicker(Properties.Settings.Default.WorkSeconds);
             }
             else if (p == Period.Rest)
             {
-                PeriodCurrent = p;
-                PeriodSeconds = RestSeconds;
+                _periodCurrent = p;
+                _periodSeconds = Properties.Settings.Default.RestSeconds;
 
                 // update GUI elements
-                periodLabelDisplay.Text = "- " + RestLabel + " -";
-                timeDisplay.Text = FormatTime(RestSeconds);
-                restartTimeInput.Value = SecondsToDateTimePicker(RestSeconds);
+                periodLabelDisplay.Text = "- " + Period.Rest.ToString() + " -";
+                timeDisplay.Text = FormatTime(Properties.Settings.Default.RestSeconds);
+                restartTimeInput.Value = SecondsToDateTimePicker(Properties.Settings.Default.RestSeconds);
             }
             else
             {
@@ -130,6 +120,7 @@ namespace PomodoroTimerForm
 
         private void LogPeriod(TimerState state)
         {
+            // set start date if not yet set
             if (StartDate == null)
             {
                 StartDate = DateTime.Now.ToString();
@@ -140,21 +131,22 @@ namespace PomodoroTimerForm
                 }
             }
 
+            // determine log entry contents
             string stateMsg = "";
             if (state == TimerState.Start)
             {
                 uint defaultSeconds = 0;
-                if (PeriodCurrent == Period.Work)
+                if (_periodCurrent == Period.Work)
                 {
-                    defaultSeconds = WorkSeconds;
+                    defaultSeconds = Properties.Settings.Default.WorkSeconds;
 
                 }
-                else if (PeriodCurrent == Period.Rest)
+                else if (_periodCurrent == Period.Rest)
                 {
-                    defaultSeconds = RestSeconds;
+                    defaultSeconds = Properties.Settings.Default.RestSeconds;
                 }
 
-                if (PeriodSeconds < defaultSeconds)
+                if (_periodSeconds < defaultSeconds)
                 {
                     stateMsg = "period resumed";
                 }
@@ -163,11 +155,11 @@ namespace PomodoroTimerForm
                     stateMsg = "period started";
                 }
 
-                stateMsg += " (" + FormatTime(PeriodSeconds) + ")";
+                stateMsg += " (" + FormatTime(_periodSeconds) + ")";
             }
             else if (state == TimerState.Restart)
             {
-                stateMsg = "period restarted (" + FormatTime(PeriodSeconds) + ")";
+                stateMsg = "period restarted (" + FormatTime(_periodSeconds) + ")";
             }
             else if (state == TimerState.End)
             {
@@ -178,14 +170,14 @@ namespace PomodoroTimerForm
                 stateMsg = "period paused";
             }
 
-            // cull the log if exceeding some specified amount of entries (100)
-            if (PeriodLog.Count > 100)
+            // cull the log if exceeding max, leave ten old entries
+            if (PeriodLog.Count > _maxLogEntries)
             {
-                PeriodLog.RemoveRange(0, 90);
+                PeriodLog.RemoveRange(0, _maxLogEntries - 10);
             }
 
             // add the entry to the log
-            string entry = DateTime.Now.ToString("h:mm:ss tt") + " " + PeriodCurrent.ToString() +
+            string entry = DateTime.Now.ToString("h:mm:ss tt") + " " + _periodCurrent.ToString() +
                 " " + stateMsg;
             PeriodLog.Add(entry);
             if (RunningLogForm != null)
@@ -198,7 +190,7 @@ namespace PomodoroTimerForm
         {
             periodTimer.Start();
             startpauseButton.Text = "Pause";
-            TimerRunning = true;
+            _timerRunning = true;
 
             // Only components capable of calling this function are able to advance to the next
             // period, so it makes sense they are the only ones that can stop the remindSound
@@ -215,28 +207,40 @@ namespace PomodoroTimerForm
         {
             periodTimer.Stop();
             startpauseButton.Text = "Start";
-            TimerRunning = false;
+            _timerRunning = false;
 
             // remove start and end time of period from GUI
             startTimeDisplay.Visible = false;
             endTimeDisplay.Visible = false;
         }
 
+        /// <summary>
+        /// Used by KeyIntercept.Start() as the callback method executed when the user presses any
+        /// key
+        /// </summary>
+        /// <param name="keyCode">Keycode of the pressed key</param>
         private void OnKeyIntercept(int keyCode)
         {
-            if (keyCode == (int)GlobalStartKey)
+            if (keyCode == (int)Properties.Settings.Default.GlobalStartKey)
             {
-                if (!TimerRunning)
+                if (!_timerRunning)
                 {
                     LogPeriod(TimerState.Start);
-                    StartAndDisplayTimer();
+                    StartAndDisplayTimer(); // implicitly removes keyboard hook,
+                                            // and therefore "disables" this method
                     RemindSound.Play();
                     // WinFlash.StopFlashingWindow(this.Handle); // Does not lower taskbar
                 }
             }
         }
 
-        public static DateTime SecondsToDateTimePicker(uint seconds)
+        /// <summary>
+        /// Converts input seconds into a special DateTime object used solely for displaying
+        /// period time in DateTimePicker controls
+        /// </summary>
+        /// <param name="seconds"></param>
+        /// <returns></returns>
+        public DateTime SecondsToDateTimePicker(uint seconds)
         {
             int hours = (int)seconds / 3600;
             int mins = (int)seconds % 3600 / 60;
@@ -245,49 +249,55 @@ namespace PomodoroTimerForm
             return new DateTime(2000, 1, 1, hours, mins, secs);
         }
 
-        public static uint DateTimePickerToSeconds(DateTime input)
+        /// <summary>
+        /// Converts input DateTime object (from a DateTimePicker used specifically only for user
+        /// period time input) into seconds
+        /// </summary>
+        /// <param name="input">a DateTimePicker's DateTime object</param>
+        /// <returns></returns>
+        public uint DateTimePickerToSeconds(DateTime input)
         {
             return (uint)input.Hour * 3600 + (uint)input.Minute * 60 + (uint)input.Second;
         }
 
         private void InitializeSoundPlayers()
         {
-            string savedPESPath = Properties.Settings.Default.PeriodEndSoundPath;
-            if (savedPESPath == SettingsForm.PeriodEndSoundDefault)
+            string defaultPESPath = Properties.Settings.Default.PeriodEndSoundPath;
+            if (defaultPESPath == PeriodEndSoundName)
             {
                 PeriodEndSound = new SoundPlayer(Properties.Resources.LingeringBells);
             }
             else
             {
-                if (File.Exists(savedPESPath))
+                if (File.Exists(defaultPESPath))
                 {
-                    PeriodEndSound = new SoundPlayer(savedPESPath);
+                    PeriodEndSound = new SoundPlayer(defaultPESPath);
                 }
                 else
                 {
                     // reset the bad/nonexistant path to the default
-                    Properties.Settings.Default.PeriodEndSoundPath = SettingsForm.PeriodEndSoundDefault;
+                    Properties.Settings.Default.PeriodEndSoundPath = PeriodEndSoundName;
                     Properties.Settings.Default.Save();
                     PeriodEndSound = new SoundPlayer(Properties.Resources.LingeringBells);
                     Debug.WriteLine("ERROR: Bad/nonexistant path, resetting period end sound to default");
                 }
             }
 
-            string savedRSPath = Properties.Settings.Default.RemindSoundPath;
-            if (savedRSPath == SettingsForm.RemindSoundDefault)
+            string defaultRSPath = Properties.Settings.Default.RemindSoundPath;
+            if (defaultRSPath == RemindSoundName)
             {
                 RemindSound = new SoundPlayer(Properties.Resources.Notify);
             }
             else
             {
-                if (File.Exists(savedRSPath))
+                if (File.Exists(defaultRSPath))
                 {
-                    RemindSound = new SoundPlayer(savedRSPath);
+                    RemindSound = new SoundPlayer(defaultRSPath);
                 }
                 else
                 {
                     // reset the bad/nonexistant path to the default
-                    Properties.Settings.Default.RemindSoundPath = SettingsForm.RemindSoundDefault;
+                    Properties.Settings.Default.RemindSoundPath = RemindSoundName;
                     Properties.Settings.Default.Save();
                     RemindSound = new SoundPlayer(Properties.Resources.Notify);
                     Debug.WriteLine("ERROR: Bad/nonexistant path, resetting remind sound to default");
@@ -295,57 +305,21 @@ namespace PomodoroTimerForm
             }
         }
 
-        /// <summary>
-        /// Changes the sound used for period end
-        /// </summary>
-        /// <param name="path">The path to the new sound's wav file. If left empty, will set to
-        /// the default period end sound</param>
-        public void SetPeriodEndSound(string path = null)
-        {
-            if (path != null && File.Exists(path))
-            {
-                PeriodEndSound.SoundLocation = path;
-                PeriodEndSound.Load();
-            }
-            else
-            {
-                PeriodEndSound.Stream = Properties.Resources.LingeringBells;
-            }
-        }
-
-        /// <summary>
-        /// Changes the sound used for remind
-        /// </summary>
-        /// <param name="path">The path to the new sound's wav file. If left empty, will set to
-        /// the default remind sound</param>
-        public void SetRemindSound(string path = null)
-        {
-            if (path != null && File.Exists(path))
-            {
-                RemindSound.SoundLocation = path;
-                RemindSound.Load();
-            }
-            else
-            {
-                RemindSound.Stream = Properties.Resources.Notify;
-            }
-        }
-
         public void SetNotifyIconVisibility(bool visible)
         {
             mainNotifyIcon.Visible = visible;
-            if (HiddenInSystemTray && !visible)
+            if (_hiddenInSystemTray && !visible)
             {
                 // show form to avoid both it and the notifyicon to be hidden
                 Show();
                 this.WindowState = FormWindowState.Normal;
-                HiddenInSystemTray = false;
+                _hiddenInSystemTray = false;
             }
         }
 
         private void startpauseButton_Click(object sender, EventArgs e)
         {
-            if (TimerRunning)
+            if (_timerRunning)
             {
                 // log pause before stopping timer
                 LogPeriod(TimerState.Pause);
@@ -365,31 +339,31 @@ namespace PomodoroTimerForm
         private void restartButton_Click(object sender, EventArgs e)
         {
             periodTimer.Stop();
-            PeriodSeconds = DateTimePickerToSeconds(restartTimeInput.Value);
-            timeDisplay.Text = FormatTime(PeriodSeconds);
+            _periodSeconds = DateTimePickerToSeconds(restartTimeInput.Value);
+            timeDisplay.Text = FormatTime(_periodSeconds);
             LogPeriod(TimerState.Restart);
             StartAndDisplayTimer();
         }
 
         private void periodTimer_Tick(object sender, EventArgs e)
         {
-            if (PeriodSeconds > 0)
+            if (_periodSeconds > 0)
             {
-                PeriodSeconds--;
-                timeDisplay.Text = FormatTime(PeriodSeconds);
+                _periodSeconds--;
+                timeDisplay.Text = FormatTime(_periodSeconds);
 
-                if (PeriodCurrent == Period.Work)
+                if (_periodCurrent == Period.Work)
                 {
-                    TotalWorkSeconds++;
+                    _totalWorkSeconds++;
                     if (RunningLogForm != null)
                     {
-                        RunningLogForm.UpdateTotalWorkDisplay(TotalWorkSeconds);
+                        RunningLogForm.UpdateTotalWorkDisplay(_totalWorkSeconds);
                     }
                 }
             }
             else
             {
-                if (PeriodEndStopEnabled)
+                if (Properties.Settings.Default.PeriodEndStop)
                 {
                     // we need to log the period end before changing the period
                     LogPeriod(TimerState.End);
@@ -397,11 +371,11 @@ namespace PomodoroTimerForm
                     startpauseButton.Select();  // highlight the startpause button
                 }
 
-                if (PeriodCurrent == Period.Work)
+                if (_periodCurrent == Period.Work)
                 {
                     ChangePeriodTo(Period.Rest);
                 }
-                else if (PeriodCurrent == Period.Rest)
+                else if (_periodCurrent == Period.Rest)
                 {
                     ChangePeriodTo(Period.Work);
                 }
@@ -411,24 +385,24 @@ namespace PomodoroTimerForm
                     periodTimer.Stop();
                 }
 
-                if (!PeriodEndStopEnabled)
+                if (!Properties.Settings.Default.PeriodEndStop)
                 {
                     // "start" the following period
                     LogPeriod(TimerState.Start);
                     DisplayStartEndTimes();
                 }
 
-                if (GlobalStartEnabled) // start keyboard hook for start key
+                if (Properties.Settings.Default.GlobalStart) // start keyboard hook for start key
                 {
                     InterceptKeys.Start(OnKeyIntercept);
                 }
 
-                if (WindowFlashEnabled) 
+                if (Properties.Settings.Default.WindowFlash) 
                 {
-                    if (HiddenInSystemTray) // unhide window from system tray
+                    if (_hiddenInSystemTray) // unhide window from system tray
                     {
                         Show();
-                        HiddenInSystemTray = false;
+                        _hiddenInSystemTray = false;
                     }
 
                     // flash taskbar icon orange
@@ -436,15 +410,15 @@ namespace PomodoroTimerForm
                         WinFlash.FlashWindowFlags.FLASHW_TIMERNOFG);
                 }
 
-                if (PeriodEndSoundEnabled)
+                if (Properties.Settings.Default.PeriodEndSound)
                 {
                     PeriodEndSound.Play();
                 }
 
-                if (RemindEnabled)  
+                if (Properties.Settings.Default.Remind)  
                 {
                     // activate remind sound timer
-                    RemindSeconds = RemindSecondsSaved;
+                    _remindSeconds = Properties.Settings.Default.RemindSeconds;
                     remindSoundTimer.Start();
                 }
             }
@@ -457,7 +431,7 @@ namespace PomodoroTimerForm
 
         private void logButton_Click(object sender, EventArgs e)
         {
-            RunningLogForm = new LogForm(this, PeriodLog, TotalWorkSeconds, StartDate);
+            RunningLogForm = new LogForm(this, _totalWorkSeconds);
             RunningLogForm.Show();
         }
 
@@ -469,17 +443,17 @@ namespace PomodoroTimerForm
                 && this.WindowState == FormWindowState.Minimized)
             {
                 Hide();
-                HiddenInSystemTray = true;
+                _hiddenInSystemTray = true;
             }
         }
 
         private void nextButton_Click(object sender, EventArgs e)
         {
-            if (PeriodCurrent == Period.Work)
+            if (_periodCurrent == Period.Work)
             {
                 ChangePeriodTo(Period.Rest);
             }
-            else if (PeriodCurrent == Period.Rest)
+            else if (_periodCurrent == Period.Rest)
             {
                 ChangePeriodTo(Period.Work);
             }
@@ -488,7 +462,7 @@ namespace PomodoroTimerForm
                 periodTimer.Stop();
             }
 
-            if (TimerRunning)
+            if (_timerRunning)
             {
                 LogPeriod(TimerState.Start);
                 DisplayStartEndTimes();
@@ -501,30 +475,30 @@ namespace PomodoroTimerForm
         /// </summary>
         private void remindSoundTimer_Tick(object sender, EventArgs e)
         {
-            if (RemindSeconds > 0)
+            if (_remindSeconds > 0)
             {
-                RemindSeconds--;
+                _remindSeconds--;
             }
             else
             {
                 RemindSound.Play();
-                RemindSeconds = RemindSecondsSaved;
+                _remindSeconds = Properties.Settings.Default.RemindSeconds;
             }
         }
 
         private void notifyIcon_MouseClick(object sender, MouseEventArgs e)
         {
-            if (HiddenInSystemTray)
+            if (_hiddenInSystemTray)
             {
                 Show();
                 this.WindowState = FormWindowState.Normal;
                 this.Activate();
-                HiddenInSystemTray = false;
+                _hiddenInSystemTray = false;
             }
             else
             {
                 Hide();
-                HiddenInSystemTray = true;
+                _hiddenInSystemTray = true;
             }
         }
     }

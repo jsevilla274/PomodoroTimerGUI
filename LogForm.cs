@@ -14,20 +14,23 @@ namespace PomodoroTimerForm
     {
         private MainForm _parentForm;
 
-        public LogForm(MainForm parent, List<string> currentLog, uint totalWorkSeconds, string startDate)
+        public LogForm(MainForm parent, uint currentTotalWorkSecs)
         {
             InitializeComponent();
             this.Icon = Icon.ExtractAssociatedIcon(Application.ExecutablePath);
 
             _parentForm = parent;
-            UpdateTotalWorkDisplay(totalWorkSeconds);
-            if (startDate != null)
+            
+            // set start date, if applicable
+            if (parent.StartDate != null)
             {
-                timerStartDate.Text = startDate;
+                timerStartDate.Text = parent.StartDate;
             }
 
+            UpdateTotalWorkDisplay(currentTotalWorkSecs);
+
             // print log contents onto the textbox
-            currentLog.ForEach(UpdateLog);
+            parent.PeriodLog.ForEach(UpdateLog);
         }
 
         public void UpdateLog(string entry)

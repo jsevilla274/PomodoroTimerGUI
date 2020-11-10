@@ -14,8 +14,6 @@ namespace PomodoroTimerForm
 {
     public partial class SettingsForm : Form
     {
-        public static readonly string PeriodEndSoundDefault = "lingeringbells.wav";
-        public static readonly string RemindSoundDefault = "notify.wav";
         private DateTime _workPeriodSaved, _restPeriodSaved;
         private MainForm _parentForm;
         private bool _globalStartEditing = false;
@@ -39,8 +37,8 @@ namespace PomodoroTimerForm
         private void InitializeFormDefaults()
         {
             // set private variables to default
-            _workPeriodSaved = MainForm.SecondsToDateTimePicker(Properties.Settings.Default.WorkSeconds);
-            _restPeriodSaved = MainForm.SecondsToDateTimePicker(Properties.Settings.Default.RestSeconds);
+            _workPeriodSaved = _parentForm.SecondsToDateTimePicker(Properties.Settings.Default.WorkSeconds);
+            _restPeriodSaved = _parentForm.SecondsToDateTimePicker(Properties.Settings.Default.RestSeconds);
             _globalStartKeyCurrent = Properties.Settings.Default.GlobalStartKey;
 
             // set GUI elements to default
@@ -77,13 +75,13 @@ namespace PomodoroTimerForm
             {
                 currentSoundPath = Properties.Settings.Default.PeriodEndSoundPath;
                 _periodEndSoundPathCurrent = currentSoundPath;
-                defaultSound = PeriodEndSoundDefault;
+                defaultSound = _parentForm.PeriodEndSoundName;
             }
             else if (cbox == remindSoundComboBox)
             {
                 currentSoundPath = Properties.Settings.Default.RemindSoundPath;
                 _remindSoundPathCurrent = currentSoundPath;
-                defaultSound = RemindSoundDefault;
+                defaultSound = _parentForm.RemindSoundName;
             }
             cbox.Items.Add(defaultSound);
             if (currentSoundPath == defaultSound)
@@ -138,85 +136,81 @@ namespace PomodoroTimerForm
         {
             if (workPeriodSetting.Value != _workPeriodSaved)
             {
-                uint newSeconds = MainForm.DateTimePickerToSeconds(workPeriodSetting.Value);
-                Properties.Settings.Default.WorkSeconds = newSeconds;
-                _parentForm.WorkSeconds = newSeconds;
+                Properties.Settings.Default.WorkSeconds = 
+                    _parentForm.DateTimePickerToSeconds(workPeriodSetting.Value);
             }
 
             if (restPeriodSetting.Value != _restPeriodSaved)
             {
-                uint newSeconds = MainForm.DateTimePickerToSeconds(restPeriodSetting.Value);
-                Properties.Settings.Default.RestSeconds = newSeconds;
-                _parentForm.RestSeconds = newSeconds;
+                Properties.Settings.Default.RestSeconds =
+                    _parentForm.DateTimePickerToSeconds(restPeriodSetting.Value);
             }
 
             if (periodEndSoundSetting.Checked != Properties.Settings.Default.PeriodEndSound)
             {
                 Properties.Settings.Default.PeriodEndSound = periodEndSoundSetting.Checked;
-                _parentForm.PeriodEndSoundEnabled = periodEndSoundSetting.Checked;
             }
 
             if (periodEndStopSetting.Checked != Properties.Settings.Default.PeriodEndStop)
             {
                 Properties.Settings.Default.PeriodEndStop = periodEndStopSetting.Checked;
-                _parentForm.PeriodEndStopEnabled = periodEndStopSetting.Checked;
             }
 
             if (remindSetting.Checked != Properties.Settings.Default.Remind)
             {
                 Properties.Settings.Default.Remind = remindSetting.Checked;
-                _parentForm.RemindEnabled = remindSetting.Checked;
             }
 
             if ((int)remindSecondsSetting.Value != Properties.Settings.Default.RemindSeconds)
             {
                 Properties.Settings.Default.RemindSeconds = (uint)remindSecondsSetting.Value;
-                _parentForm.RemindSecondsSaved = (uint)remindSecondsSetting.Value;
             }
 
             if (globalStartSetting.Checked != Properties.Settings.Default.GlobalStart)
             {
                 Properties.Settings.Default.GlobalStart = globalStartSetting.Checked;
-                _parentForm.GlobalStartEnabled = globalStartSetting.Checked;
             }
 
             if (_globalStartKeyCurrent != Properties.Settings.Default.GlobalStartKey)
             {
                 Properties.Settings.Default.GlobalStartKey = _globalStartKeyCurrent;
-                _parentForm.GlobalStartKey = _globalStartKeyCurrent;
             }
 
             if (windowFlashSetting.Checked != Properties.Settings.Default.WindowFlash)
             {
-                Properties.Settings.Default.WindowFlash = windowFlashSetting.Checked;
-                _parentForm.WindowFlashEnabled = windowFlashSetting.Checked;     
+                Properties.Settings.Default.WindowFlash = windowFlashSetting.Checked;   
             }
 
-            // TODO: use public soundplayer properties to set soundplayers instead of cluttering
-            // mainform with this logic
-
-            string savedPESPath = Properties.Settings.Default.PeriodEndSoundPath;
-            if (periodEndSoundComboBox.SelectedIndex == 0 && savedPESPath != PeriodEndSoundDefault)
+            // check if PeriodEndSound is changed, ensuring a valid sound file (File.Exists)
+            if (periodEndSoundComboBox.SelectedIndex == 0 
+                && Properties.Settings.Default.PeriodEndSoundPath != _parentForm.PeriodEndSoundName)
             {
-                Properties.Settings.Default.PeriodEndSoundPath = PeriodEndSoundDefault;
-                _parentForm.SetPeriodEndSound();
+                Properties.Settings.Default.PeriodEndSoundPath = _parentForm.PeriodEndSoundName;
+                _parentForm.PeriodEndSound.Stream = Properties.Resources.LingeringBells;
             }
-            else if (periodEndSoundComboBox.SelectedIndex == 1 && savedPESPath != _periodEndSoundPathCurrent)
+            else if (periodEndSoundComboBox.SelectedIndex == 1 
+                && Properties.Settings.Default.PeriodEndSoundPath != _periodEndSoundPathCurrent
+                && File.Exists(_periodEndSoundPathCurrent))
             {
                 Properties.Settings.Default.PeriodEndSoundPath = _periodEndSoundPathCurrent;
-                _parentForm.SetPeriodEndSound(_periodEndSoundPathCurrent);
+                _parentForm.PeriodEndSound.SoundLocation = _periodEndSoundPathCurrent;
+                _parentForm.PeriodEndSound.Load();
             }
 
-            string savedRSPath = Properties.Settings.Default.RemindSoundPath;
-            if (remindSoundComboBox.SelectedIndex == 0 && savedRSPath != RemindSoundDefault)
+            // check if RemindSound is changed, ensuring a valid sound file (File.Exists)
+            if (remindSoundComboBox.SelectedIndex == 0 
+                && Properties.Settings.Default.RemindSoundPath != _parentForm.RemindSoundName)
             {
-                Properties.Settings.Default.RemindSoundPath = RemindSoundDefault;
-                _parentForm.SetRemindSound();
+                Properties.Settings.Default.RemindSoundPath = _parentForm.RemindSoundName;
+                _parentForm.RemindSound.Stream = Properties.Resources.Notify;
             }
-            else if (remindSoundComboBox.SelectedIndex == 1 && savedRSPath != _remindSoundPathCurrent)
+            else if (remindSoundComboBox.SelectedIndex == 1 
+                && Properties.Settings.Default.RemindSoundPath != _remindSoundPathCurrent
+                && File.Exists(_remindSoundPathCurrent))
             {
                 Properties.Settings.Default.RemindSoundPath = _remindSoundPathCurrent;
-                _parentForm.SetRemindSound(_remindSoundPathCurrent);
+                _parentForm.RemindSound.SoundLocation = _remindSoundPathCurrent;
+                _parentForm.RemindSound.Load();
             }
 
             if (notifyIconSetting.Checked != Properties.Settings.Default.NotifyIcon)
