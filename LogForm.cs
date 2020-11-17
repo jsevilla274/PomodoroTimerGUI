@@ -1,14 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace PomodoroTimerForm
+namespace PomodoroTimer
 {
     public partial class LogForm : Form
     {
@@ -43,6 +37,10 @@ namespace PomodoroTimerForm
             _parentForm.RunningLogForm = null;
         }
 
+        /// <summary>
+        /// Updates the "Total Work Time" in the log form
+        /// </summary>
+        /// <param name="totalWorkSeconds"></param>
         public void UpdateTotalWorkDisplay(uint totalWorkSeconds)
         {
             uint hours = totalWorkSeconds / 3600;
@@ -55,6 +53,10 @@ namespace PomodoroTimerForm
             totalWorkDisplay.Text = hrStr + ':' + minStr + ':' + secStr;
         }
 
+        /// <summary>
+        /// Updates the "Started" time in the log form
+        /// </summary>
+        /// <param name="dateStr"></param>
         public void SetStartDate(string dateStr)
         {
             timerStartDate.Text = dateStr;

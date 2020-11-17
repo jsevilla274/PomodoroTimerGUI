@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 
-namespace PomodoroTimerForm
+namespace PomodoroTimer
 {
     /// <summary>
     /// Flash Window in Taskbar via Win32 FlashWindowEx

@@ -1,17 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
-using System.Linq;
 using System.Media;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace PomodoroTimerForm
+namespace PomodoroTimer
 {
     public partial class MainForm : Form
     {
@@ -58,10 +53,15 @@ namespace PomodoroTimerForm
             InitializeSoundPlayers();
             PeriodLog = new List<string>();
 
-            // start timer immediately
-            startpauseButton_Click(null, null);
+            if (Properties.Settings.Default.StartTimerOnStartup)
+            {
+                startpauseButton_Click(null, null);
+            }
         }
 
+        /// <summary>
+        /// Shows start and end times in h:mm format on the GUI
+        /// </summary>
         private void DisplayStartEndTimes()
         {
             DateTime startTime = DateTime.Now;
@@ -87,9 +87,11 @@ namespace PomodoroTimerForm
             return minStr + ':' + secStr;
         }
 
-        // what if changeperiodto also had the ability to displaystartendtimes? better, what if
-        // we decoupled the GUI changing abilities of changeperiodto and madea new function with
-        // display startendtimes that was in charge of only updating the gui after a period change?
+        /// <summary>
+        /// Changes to the given period, updating internal variables as well as certain GUI
+        /// elements specific to the given period.
+        /// </summary>
+        /// <param name="p">Period to change to</param>
         private void ChangePeriodTo(Period p)
         {
             if (p == Period.Work)
@@ -97,7 +99,7 @@ namespace PomodoroTimerForm
                 _periodCurrent = p;
                 _periodSeconds = Properties.Settings.Default.WorkSeconds;
 
-                // update GUI elements
+                // update GUI elements to reflect period
                 periodLabelDisplay.Text = "- " + Period.Work.ToString() + " -";
                 timeDisplay.Text = FormatTime(Properties.Settings.Default.WorkSeconds);
                 restartTimeInput.Value = SecondsToDateTimePicker(Properties.Settings.Default.WorkSeconds);
@@ -107,7 +109,7 @@ namespace PomodoroTimerForm
                 _periodCurrent = p;
                 _periodSeconds = Properties.Settings.Default.RestSeconds;
 
-                // update GUI elements
+                // update GUI elements to reflect period
                 periodLabelDisplay.Text = "- " + Period.Rest.ToString() + " -";
                 timeDisplay.Text = FormatTime(Properties.Settings.Default.RestSeconds);
                 restartTimeInput.Value = SecondsToDateTimePicker(Properties.Settings.Default.RestSeconds);
@@ -118,6 +120,12 @@ namespace PomodoroTimerForm
             }
         }
 
+        /// <summary>
+        /// Creates a unique entry in the period log depending on the actual time and TimerState.
+        /// Also creates StartDate which indicates when the timer first started
+        /// </summary>
+        /// <param name="state">State representing when the timer starts, pauses, restarts, or ends 
+        /// its period</param>
         private void LogPeriod(TimerState state)
         {
             // set start date if not yet set
@@ -186,6 +194,10 @@ namespace PomodoroTimerForm
             }
         }
 
+        /// <summary>
+        /// Starts the period timer, updates elements of the GUI related the the timer, and finally
+        /// stops resources for background tasks like the remind sound and the global start key
+        /// </summary>
         private void StartAndDisplayTimer()
         {
             periodTimer.Start();
@@ -203,6 +215,9 @@ namespace PomodoroTimerForm
             DisplayStartEndTimes();
         }
 
+        /// <summary>
+        /// Stops the period timer and updates elements of the GUI related the the timer
+        /// </summary>
         private void StopAndDisplayTimer()
         {
             periodTimer.Stop();
@@ -215,7 +230,7 @@ namespace PomodoroTimerForm
         }
 
         /// <summary>
-        /// Used by KeyIntercept.Start() as the callback method executed when the user presses any
+        /// Used by KeyIntercept.Start as the callback method executed when the user presses any
         /// key
         /// </summary>
         /// <param name="keyCode">Keycode of the pressed key</param>
@@ -310,7 +325,7 @@ namespace PomodoroTimerForm
             mainNotifyIcon.Visible = visible;
             if (_hiddenInSystemTray && !visible)
             {
-                // show form to avoid both it and the notifyicon to be hidden
+                // show form to avoid both it and the notifyicon being hidden
                 Show();
                 this.WindowState = FormWindowState.Normal;
                 _hiddenInSystemTray = false;
@@ -486,6 +501,9 @@ namespace PomodoroTimerForm
             }
         }
 
+        /// <summary>
+        /// Show/hides the form on click
+        /// </summary>
         private void notifyIcon_MouseClick(object sender, MouseEventArgs e)
         {
             if (_hiddenInSystemTray)

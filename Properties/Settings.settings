@@ -1,12 +1,12 @@
 ﻿<?xml version='1.0' encoding='utf-8'?>
-<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="PomodoroTimerForm.Properties" GeneratedClassName="Settings">
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="PomodoroTimer.Properties" GeneratedClassName="Settings">
   <Profiles />
   <Settings>
     <Setting Name="WorkSeconds" Type="System.UInt32" Scope="User">
-      <Value Profile="(Default)">10</Value>
+      <Value Profile="(Default)">1200</Value>
     </Setting>
     <Setting Name="RestSeconds" Type="System.UInt32" Scope="User">
-      <Value Profile="(Default)">5</Value>
+      <Value Profile="(Default)">30</Value>
     </Setting>
     <Setting Name="RemindSeconds" Type="System.UInt32" Scope="User">
       <Value Profile="(Default)">45</Value>
@@ -21,7 +21,7 @@
       <Value Profile="(Default)">True</Value>
     </Setting>
     <Setting Name="GlobalStart" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">True</Value>
+      <Value Profile="(Default)">False</Value>
     </Setting>
     <Setting Name="WindowFlash" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
@@ -36,10 +36,13 @@
       <Value Profile="(Default)">notify.wav</Value>
     </Setting>
     <Setting Name="NotifyIcon" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">True</Value>
+      <Value Profile="(Default)">False</Value>
     </Setting>
     <Setting Name="NotifyIconMinimize" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="StartTimerOnStartup" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
     </Setting>
   </Settings>
 </SettingsFile>

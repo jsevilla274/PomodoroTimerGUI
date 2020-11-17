@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace PomodoroTimerForm.Properties {
+namespace PomodoroTimer.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
@@ -25,7 +25,7 @@ namespace PomodoroTimerForm.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("10")]
+        [global::System.Configuration.DefaultSettingValueAttribute("1200")]
         public uint WorkSeconds {
             get {
                 return ((uint)(this["WorkSeconds"]));
@@ -37,7 +37,7 @@ namespace PomodoroTimerForm.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("5")]
+        [global::System.Configuration.DefaultSettingValueAttribute("30")]
         public uint RestSeconds {
             get {
                 return ((uint)(this["RestSeconds"]));
@@ -97,7 +97,7 @@ namespace PomodoroTimerForm.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
         public bool GlobalStart {
             get {
                 return ((bool)(this["GlobalStart"]));
@@ -157,7 +157,7 @@ namespace PomodoroTimerForm.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
         public bool NotifyIcon {
             get {
                 return ((bool)(this["NotifyIcon"]));
@@ -176,6 +176,18 @@ namespace PomodoroTimerForm.Properties {
             }
             set {
                 this["NotifyIconMinimize"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool StartTimerOnStartup {
+            get {
+                return ((bool)(this["StartTimerOnStartup"]));
+            }
+            set {
+                this["StartTimerOnStartup"] = value;
             }
         }
     }

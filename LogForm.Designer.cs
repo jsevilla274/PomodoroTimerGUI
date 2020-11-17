@@ -1,4 +1,4 @@
-﻿namespace PomodoroTimerForm
+﻿namespace PomodoroTimer
 {
     partial class LogForm
     {

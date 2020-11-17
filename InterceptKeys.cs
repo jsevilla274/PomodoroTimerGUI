@@ -2,7 +2,7 @@
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 
-namespace PomodoroTimerForm
+namespace PomodoroTimer
 {
     /// <summary>
     /// Low-Level Keyboard Hooks

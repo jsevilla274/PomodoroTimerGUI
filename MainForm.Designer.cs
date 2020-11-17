@@ -1,4 +1,4 @@
-﻿namespace PomodoroTimerForm
+﻿namespace PomodoroTimer
 {
     partial class MainForm
     {
@@ -164,7 +164,7 @@
             this.logButton.Location = new System.Drawing.Point(35, 241);
             this.logButton.Name = "logButton";
             this.logButton.Size = new System.Drawing.Size(142, 38);
-            this.logButton.TabIndex = 10;
+            this.logButton.TabIndex = 5;
             this.logButton.Text = "Log";
             this.logButton.UseVisualStyleBackColor = true;
             this.logButton.Click += new System.EventHandler(this.logButton_Click);
@@ -186,7 +186,7 @@
             this.Controls.Add(this.timeDisplay);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Name = "MainForm";
-            this.Text = "PomodoroTimer";
+            this.Text = "Pomodoro Timer";
             this.Resize += new System.EventHandler(this.MainForm_Resize);
             this.ResumeLayout(false);
 

@@ -1,16 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Diagnostics;
 using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace PomodoroTimerForm
+namespace PomodoroTimer
 {
     public partial class SettingsForm : Form
     {
@@ -45,6 +38,7 @@ namespace PomodoroTimerForm
             workPeriodSetting.Value = _workPeriodSaved;
             restPeriodSetting.Value = _restPeriodSaved;
 
+            startTimerOnStartupSetting.Checked = Properties.Settings.Default.StartTimerOnStartup;
             periodEndSoundSetting.Checked = Properties.Settings.Default.PeriodEndSound;
             InitializeSoundComboBox(periodEndSoundComboBox);
             periodEndSoundSetting_CheckedChanged(null, null); // enable PESound suboptions
@@ -67,6 +61,12 @@ namespace PomodoroTimerForm
             notifyIconSetting_CheckedChanged(null, null);   // enable notifyIconSetting suboptions
         }
 
+        /// <summary>
+        /// Initializes a "sound" ComboBox such that the first option is the default sound, the 
+        /// middle option is a custom user sound (if exists in settings) and the last option opens a 
+        /// file selector
+        /// </summary>
+        /// <param name="cbox">the given "sound" ComboBox</param>
         private void InitializeSoundComboBox(ComboBox cbox)
         {
             string currentSoundPath = "";
@@ -101,6 +101,9 @@ namespace PomodoroTimerForm
             cbox.SelectedIndexChanged += new EventHandler(soundComboBox_SelectedIndexChanged);
         }
 
+        /// <summary>
+        /// Sets the Enabled property of its "suboptions"
+        /// </summary>
         private void periodEndStopSetting_CheckedChanged(object sender, EventArgs e)
         {
             bool enable = periodEndStopSetting.Checked;
@@ -115,6 +118,9 @@ namespace PomodoroTimerForm
             globalStartKeySetting.Enabled = enable && globalStartSetting.Checked;
         }
 
+        /// <summary>
+        /// Sets the Enabled property of its "suboptions"
+        /// </summary>
         private void remindSetting_CheckedChanged(object sender, EventArgs e)
         {
             bool enable = remindSetting.Checked;
@@ -125,6 +131,9 @@ namespace PomodoroTimerForm
             remindSoundComboBox.Enabled = enable;
         }
 
+        /// <summary>
+        /// Sets the Enabled property of its "suboptions"
+        /// </summary>
         private void globalStartSetting_CheckedChanged(object sender, EventArgs e)
         {
             bool enable = globalStartSetting.Checked;
@@ -132,6 +141,9 @@ namespace PomodoroTimerForm
             globalStartKeySetting.Enabled = enable;
         }
 
+        /// <summary>
+        /// Overwrites Defaults both in memory and in storage if changed
+        /// </summary>
         private void saveSetting_Click(object sender, EventArgs e)
         {
             if (workPeriodSetting.Value != _workPeriodSaved)
@@ -146,40 +158,14 @@ namespace PomodoroTimerForm
                     _parentForm.DateTimePickerToSeconds(restPeriodSetting.Value);
             }
 
-            if (periodEndSoundSetting.Checked != Properties.Settings.Default.PeriodEndSound)
-            {
-                Properties.Settings.Default.PeriodEndSound = periodEndSoundSetting.Checked;
-            }
-
-            if (periodEndStopSetting.Checked != Properties.Settings.Default.PeriodEndStop)
-            {
-                Properties.Settings.Default.PeriodEndStop = periodEndStopSetting.Checked;
-            }
-
-            if (remindSetting.Checked != Properties.Settings.Default.Remind)
-            {
-                Properties.Settings.Default.Remind = remindSetting.Checked;
-            }
-
-            if ((int)remindSecondsSetting.Value != Properties.Settings.Default.RemindSeconds)
-            {
-                Properties.Settings.Default.RemindSeconds = (uint)remindSecondsSetting.Value;
-            }
-
-            if (globalStartSetting.Checked != Properties.Settings.Default.GlobalStart)
-            {
-                Properties.Settings.Default.GlobalStart = globalStartSetting.Checked;
-            }
-
-            if (_globalStartKeyCurrent != Properties.Settings.Default.GlobalStartKey)
-            {
-                Properties.Settings.Default.GlobalStartKey = _globalStartKeyCurrent;
-            }
-
-            if (windowFlashSetting.Checked != Properties.Settings.Default.WindowFlash)
-            {
-                Properties.Settings.Default.WindowFlash = windowFlashSetting.Checked;   
-            }
+            Properties.Settings.Default.StartTimerOnStartup = startTimerOnStartupSetting.Checked;
+            Properties.Settings.Default.PeriodEndSound = periodEndSoundSetting.Checked;
+            Properties.Settings.Default.PeriodEndStop = periodEndStopSetting.Checked;
+            Properties.Settings.Default.Remind = remindSetting.Checked;
+            Properties.Settings.Default.RemindSeconds = (uint)remindSecondsSetting.Value;
+            Properties.Settings.Default.GlobalStart = globalStartSetting.Checked;
+            Properties.Settings.Default.GlobalStartKey = _globalStartKeyCurrent;
+            Properties.Settings.Default.WindowFlash = windowFlashSetting.Checked;   
 
             // check if PeriodEndSound is changed, ensuring a valid sound file (File.Exists)
             if (periodEndSoundComboBox.SelectedIndex == 0 
@@ -219,14 +205,13 @@ namespace PomodoroTimerForm
                 _parentForm.SetNotifyIconVisibility(notifyIconSetting.Checked);
             }
 
-            if (notifyIconMinimizeSetting.Checked != Properties.Settings.Default.NotifyIconMinimize)
-            {
-                Properties.Settings.Default.NotifyIconMinimize = notifyIconMinimizeSetting.Checked;
-            }
+            Properties.Settings.Default.NotifyIconMinimize = notifyIconMinimizeSetting.Checked;
 
             // close form and save settings to file
             this.Close();
-            Properties.Settings.Default.Save();
+            Properties.Settings.Default.Save(); /* Interesting note: Save does not overwrite the 
+                                                config file, but rather a user.config in the program's
+                                                AppData folder */
         }
 
         private void globalStartKeySetting_Click(object sender, EventArgs e)
@@ -235,6 +220,10 @@ namespace PomodoroTimerForm
             globalStartKeySetting.Text = "Press any key";
         }
 
+        /// <summary>
+        /// Edits the global start key after having clicked the globalStartKeySetting TextBox
+        /// and pressing down on a key (see: globalStartKeySetting_Click)
+        /// </summary>
         private void globalStartKeySetting_KeyDown(object sender, KeyEventArgs e)
         {
             if (_globalStartEditing)
@@ -245,6 +234,11 @@ namespace PomodoroTimerForm
             }
         }
 
+
+        /// <summary>
+        /// Checks if the last option in a "sound" ComboBox was selected, creating an OpenFileDialog
+        /// so that the user may select a wav file as a new sound for the specified timer sound
+        /// </summary>
         private void soundComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             ComboBox cbox = (ComboBox)sender;
@@ -277,6 +271,9 @@ namespace PomodoroTimerForm
             }
         }
 
+        /// <summary>
+        /// Sets the Enabled property of its "suboptions"
+        /// </summary>
         private void periodEndSoundSetting_CheckedChanged(object sender, EventArgs e)
         {
             bool enable = periodEndSoundSetting.Checked;
@@ -284,6 +281,9 @@ namespace PomodoroTimerForm
             periodEndSoundComboBox.Enabled = enable;
         }
 
+        /// <summary>
+        /// Sets the Enabled property of its "suboptions"
+        /// </summary>
         private void notifyIconSetting_CheckedChanged(object sender, EventArgs e)
         {
             notifyIconMinimizeSetting.Enabled = notifyIconSetting.Checked;
