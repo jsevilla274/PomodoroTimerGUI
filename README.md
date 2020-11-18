@@ -1,6 +1,10 @@
 # Pomodoro Timer GUI
 A Pomodoro timer desktop application with a GUI for Windows. Serves as a major update to my previous [console-based pomodoro timer](https://github.com/jsevilla274/PomodoroTimer).
 
+<p align="center">
+  <img src="https://res.cloudinary.com/jsevilla274/image/upload/v1605738660/Pomodoro_Timer.jpg">
+</p>
+
 ## What is a "pomodoro timer"?
 Directly quoted from [Wikipedia](https://en.wikipedia.org/wiki/Pomodoro_Technique):
 
