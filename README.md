@@ -24,7 +24,7 @@ A pomodoro timer is an extension of this technique, serving as a productivity to
  - Hide application window by clicking on the system tray icon
 
 ## Usage
-Currently the only method of running the application is to clone and build on Visual Studio. The base timer functionality is largely self-explanatory and should work without needing to modify any settings.
+The easiest way to get the application is to download the [latest release](https://github.com/jsevilla274/PomodoroTimerGUI/releases), extract the executable, and run it. Building from source will require you to have Visual Studio installed. The base timer functionality is largely self-explanatory and should work without needing to modify any settings.
 
 ### Custom Sounds
 To set custom "period end" or "reminder" sounds, you will want to go to the "Settings" and access the last option of the respective combo box. This will open a File Picker dialog which will allow you to pick any Wave Sound File (.wav) to use. To commit your changes in the Settings window, always click the "Save" button.
